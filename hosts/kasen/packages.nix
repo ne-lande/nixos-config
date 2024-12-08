@@ -1,0 +1,91 @@
+{ pkgs, ... }: {
+ nixpkgs.config = {
+     allowUnfree = true;
+ };
+
+  environment.systemPackages = with pkgs; [
+    home-manager
+    gimp
+    vlc
+    vesktop
+    telegram-desktop
+    tree
+    xdg-utils
+    nmap
+    libreoffice-still
+    obsidian
+    jetbrains.idea-community
+    librewolf
+    wireguard-tools
+    cloc
+    burpsuite
+    cmake
+    unixtools.xxd
+    unixtools.top
+    unixtools.route
+    unixtools.ping
+    unixtools.netstat
+    unixtools.ifconfig
+    francis
+    nuclei
+    sqlmap
+    prismlauncher
+    mattermost-desktop
+    openssl
+    ungoogled-chromium
+    swaks
+    wireshark
+    cyberchef
+    dos2unix
+    john
+    pinentry-tty
+    bundix
+    imhex
+    insomnia
+    zed-editor
+    katana
+    nuclei
+    zsteg
+    pngcheck
+    exiftool
+    busybox
+    dig
+    gnumake
+    file
+    ciscoPacketTracer8
+    kitty
+    bat
+    btop
+    gcc
+    killall
+    neofetch
+    openssh
+    wget
+    zip
+    git
+    eza
+    neovim
+    fd
+    glow
+    htop
+    jq
+    ripgrep
+    tree
+    tmux
+    unrar
+    unzip
+    starship
+    p7zip
+    pandoc
+    slides
+    openvpn
+    jd-gui
+    teamspeak_client
+    dbeaver-bin
+  ];
+
+  fonts.packages = with pkgs; [
+    fira-code
+    nerdfonts
+  ];
+}
