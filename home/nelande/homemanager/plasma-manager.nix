@@ -1,11 +1,16 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  wallpaper = "";
+in
+{
   programs.plasma = {
     enable = true;
-
+    overrideConfig = true;
     #
     # Some high-level settings:
     #
     workspace = {
+      enableMiddleClickPaste = false;
       clickItemTo = "select";
       lookAndFeel = "org.kde.breezedark.desktop";
       cursor.theme = "Breeze-Light";
@@ -41,6 +46,19 @@
     #
     # Some mid-level settings:
     #
+    # For some undefined reason sspectacle choses to be configured differintly :(
+    spectacle = {
+      shortcuts = {
+      captureActiveWindow = "";
+      captureCurrentMonitor = "";
+      captureEntireDesktop = "";
+      captureRectangularRegion = "Print";
+      captureWindowUnderCursor = "";
+      launchWithoutCapturing = "";
+      launch = "";
+      };
+    };
+
     shortcuts = {
       ksmserver = {
         "Lock Session" = [ "Screensaver" "Meta+Ctrl+Alt+L" ];
@@ -48,7 +66,7 @@
 
       "KDE Keyboard Layout Switcher" = {
         "Switch to Last-Used Keyboard Layout"="";
-        "Switch to Next Keyboard Layout"="";
+        "Switch to Next Keyboard Layout"="Shift+Alt";
       };
 
       kwin = {
@@ -61,8 +79,13 @@
         "Zoom Out" = "";
         "Activate Window Demanding Attention" = "";
       };
-    };
 
+      "plasmashell" = {
+        # Some setting are set by root configuration so we need to override that
+        "next activity" = "none";
+        "previous activity" = "none";
+      };
+    };
 
     #
     # Some low-level settings:

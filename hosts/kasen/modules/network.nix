@@ -11,6 +11,9 @@
     firewall.checkReversePath = "loose";
   };
 
+  users.tcpcryptd = { group = "tcpcryptd"; };
+  groups = { tcpcryptd = {}; };
+
   services.dnscrypt-proxy2 = {
     enable = true;
     settings = {

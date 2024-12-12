@@ -1,5 +1,5 @@
 {
-  programs.librewolf = {  
+  programs.librewolf = {
     enable = true;
     # Enable WebGL, cookies and history
     settings = {
@@ -9,7 +9,7 @@
       "privacy.clearOnShutdown.history" = false;
       "privacy.clearOnShutdown.cookies" = false;
       "network.cookie.lifetimePolicy" = 100;
-	  "identity.fxaccounts.enabled" = true;
+      "identity.fxaccounts.enabled" = true;
     };
   };
 }

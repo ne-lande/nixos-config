@@ -48,8 +48,8 @@
       "yuka" = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          nix-ld.nixosModules.nix-ld
-          ( import ./hosts/yuka/default.nix)
+          ./home/nelande/default.nix
+          ./hosts/yuka/default.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
