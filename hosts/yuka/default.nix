@@ -26,6 +26,8 @@
   powerManagement.cpuFreqGovernor = "performance";
 
 
+  services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
   # Enable CUPS to print documents.
   services.printing.enable = false;
   security.rtkit.enable = true;

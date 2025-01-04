@@ -8,16 +8,19 @@
 
   environment.systemPackages = with pkgs; [
     home-manager
+    vesktop
     telegram-desktop
     obsidian
     librewolf
     cloc
+    insomnia
     unixtools.xxd
     unixtools.top
     unixtools.route
     unixtools.ping
     unixtools.netstat
     unixtools.ifconfig
+    libreoffice-still
     prismlauncher
     openssl
     dos2unix
