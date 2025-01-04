@@ -14,7 +14,6 @@
     nmap
     libreoffice-still
     obsidian
-    jetbrains.idea-community
     librewolf
     wireguard-tools
     cloc
@@ -81,7 +80,9 @@
     openvpn
     jd-gui
     teamspeak_client
+    hadolint
     dbeaver-bin
+    vagrant
   ];
 
   fonts.packages = with pkgs; [

@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-    kitty_background = "${../../../static/test.jpg}";
+  kitty_background = "${../../../static/test.jpg}";
 in
 {
   programs.kitty = {
