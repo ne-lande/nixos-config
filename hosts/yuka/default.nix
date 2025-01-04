@@ -1,16 +1,12 @@
 { ... }: {
   imports = [
     ./hardware.nix
-    ./modules/bundle.nix
+    ./modules
     ./packages.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   virtualisation.docker.enable = true;
-  #virtualisation.docker.storageDriver = "btrfs";
-  #virtualisation.vmware.host.enable = true;
-
   time.timeZone = "Europe/Moscow";
 
   i18n.defaultLocale = "ru_RU.UTF-8";
@@ -30,16 +26,11 @@
   powerManagement.cpuFreqGovernor = "performance";
 
 
+  services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
   # Enable CUPS to print documents.
   services.printing.enable = false;
   security.rtkit.enable = true;
-
-  nixpkgs.config = {
-      allowUnfree = true;
-      allowBroken = true;
-      allowInsecure = false;
-      allowUnsupportedSystem = true;
-  };
 
   system.stateVersion = "23.11"; # Don't change this
 }

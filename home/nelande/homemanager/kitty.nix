@@ -1,13 +1,13 @@
 { pkgs, ... }:
 let
-  wallpaper = "${../../../static/test.jpg}";
+  kitty_background = "${../../../static/test.jpg}";
 in
 {
   programs.kitty = {
     enable = true;
     font.name="FiraCode";
     shellIntegration.enableZshIntegration = true;
-    theme = "Apprentice";
+    themeFile = "Apprentice";
     keybindings = {
       "ctrl+v" = "paste_from_clipboard";
       "ctrl+c" = "copy_or_interrupt";
@@ -28,7 +28,6 @@ in
       "super+right" = "resize_window wider";
       "super+up" = "resize_window taller";
       "super+down"="resize_window shorter 3";
-
       "super+plus"="change_font_size all +2.0";
       "super+equal"="change_font_size all +2.0";
       "super+minus"="change_font_size all -2.0";
@@ -36,7 +35,7 @@ in
     };
     settings = {
         clear_all_shortcurs = "yes";
-        background_image = wallpaper;
+        background_image = kitty_background;
         background_image_layout = "scaled";
         background_image_linear = "yes";
         background_tint = "0.95";

@@ -9,12 +9,5 @@
       description = "nelande";
       extraGroups = [ "wheel" "networkmanager" "docker" "no-internet" ];
     };
-
-    users.tcpcryptd = {
-        group = "tcpcryptd";
-    };
-    groups = {
-        tcpcryptd = {};
-    };
   };
 }
