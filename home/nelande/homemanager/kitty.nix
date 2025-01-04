@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  wallpaper = "${../../../static/test.jpg}";
+in
+{
   programs.kitty = {
     enable = true;
     font.name="FiraCode";
@@ -32,7 +36,7 @@
     };
     settings = {
         clear_all_shortcurs = "yes";
-        background_image = "/home/nelande/test.jpg";
+        background_image = wallpaper;
         background_image_layout = "scaled";
         background_image_linear = "yes";
         background_tint = "0.95";
