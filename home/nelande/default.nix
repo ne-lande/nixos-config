@@ -4,5 +4,6 @@
     ./gpg.nix
     ./xdg.nix
     ./xserver.nix
+    ./steam.nix
   ];
 }

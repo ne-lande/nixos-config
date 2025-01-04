@@ -9,11 +9,11 @@
         save = 25000;
     };
 
-    zplug = {
+    antidote = {
       enable = true;
       plugins = [
-        { name = "zsh-users/zsh-syntax-highlighting"; }
-        { name = "zsh-users/zsh-autosuggestions"; }
+        "zsh-users/zsh-syntax-highlighting"
+        "zsh-users/zsh-autosuggestions"
       ];
     };
     initExtra = ''
@@ -41,7 +41,7 @@
         alias week='date +%V'
 
         alias docker-suicide='docker kill $(docker ps -q); docker rm $(docker ps -aq); docker rmi $(docker images -qa); docker volume rm $(docker volume ls -q)'
-    
+
         eval "$(starship init zsh)"
     '';
   };

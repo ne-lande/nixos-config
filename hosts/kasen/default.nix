@@ -1,7 +1,7 @@
 { ... }: {
   imports = [
     ./hardware.nix
-    ./modules/bundle.nix
+    ./modules
     ./packages.nix
   ];
 
