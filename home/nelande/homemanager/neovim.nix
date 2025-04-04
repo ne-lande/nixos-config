@@ -46,9 +46,6 @@
       let g:ycm_extra_conf_globlist = 1
       let g:ycm_confirm_extra_conf = 1
       let g:ycm_auto_trigger = 1
-
-      autocmd VimEnter * NERDTree
-      nnoremap <C-t> :NERDTreeToggle <CR>
       '';
      };
 }

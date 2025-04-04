@@ -5,6 +5,7 @@
     ./kitty.nix
     ./neovim.nix
     ./librewolf.nix
+    ./starship.nix
     (import ./spicetify.nix {inherit spicetify-nix;})
   ];
 }

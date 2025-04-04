@@ -5,7 +5,7 @@ in
 {
   programs.kitty = {
     enable = true;
-    font.name="FiraCode";
+    font.name="FiraCode Nerd Font Mono";
     shellIntegration.enableZshIntegration = true;
     themeFile = "Apprentice";
     keybindings = {
@@ -26,7 +26,7 @@ in
 
       "super+left" = "resize_window narrower";
       "super+right" = "resize_window wider";
-      "super+up" = "resize_window taller";
+      "super+up"="resize_window taller";
       "super+down"="resize_window shorter 3";
       "super+plus"="change_font_size all +2.0";
       "super+equal"="change_font_size all +2.0";
@@ -34,7 +34,7 @@ in
       "super+0"="change_font_size all 0";
     };
     settings = {
-        clear_all_shortcurs = "yes";
+        clear_all_shortcuts = "yes";
         background_image = kitty_background;
         background_image_layout = "scaled";
         background_image_linear = "yes";

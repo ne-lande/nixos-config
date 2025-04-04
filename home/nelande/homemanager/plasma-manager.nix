@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  wallpaper = "";
+  desktop-wallpaper = "${../../../static/wallpaper.webp}";
 in
 {
   programs.plasma = {
@@ -15,7 +15,14 @@ in
       lookAndFeel = "org.kde.breezedark.desktop";
       cursor.theme = "Breeze-Light";
       iconTheme = "breeze-dark";
-      wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/Patak/contents/images/1080x1920.png";
+      wallpaper = desktop-wallpaper;
+    };
+
+    kscreenlocker = {
+      autoLock = null;
+      lockOnStartup = false;
+      lockOnResume = false;
+      timeout = null;
     };
 
     hotkeys.commands."launch-kitty" = {

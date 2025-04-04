@@ -1,92 +1,46 @@
 { pkgs, ... }: {
- nixpkgs.config = {
-     allowUnfree = true;
- };
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowBroken = true;
+    allowInsecure = false;
+    allowUnsupportedSystem = true;
+  };
 
   environment.systemPackages = with pkgs; [
     home-manager
-    gimp
-    vlc
-    vesktop
-    telegram-desktop
-    tree
     xdg-utils
-    nmap
-    libreoffice-still
-    obsidian
-    librewolf
-    wireguard-tools
-    cloc
-    burpsuite
-    cmake
-    unixtools.xxd
-    unixtools.top
+    unixtools.ifconfig
+    unixtools.netstat
     unixtools.route
     unixtools.ping
-    unixtools.netstat
-    unixtools.ifconfig
-    francis
-    nuclei
-    sqlmap
-    prismlauncher
-    mattermost-desktop
-    openssl
-    ungoogled-chromium
-    swaks
-    wireshark
-    cyberchef
+    unixtools.xxd
+    unixtools.top
     dos2unix
-    john
-    pinentry-tty
-    bundix
-    imhex
-    insomnia
-    zed-editor
-    katana
-    nuclei
-    zsteg
-    pngcheck
-    exiftool
-    busybox
+    wireguard-tools
+    openvpn
+    openssl
+    openssh
     dig
-    gnumake
     file
-    ciscoPacketTracer8
-    kitty
-    bat
     btop
+    htop
+    gnumake
+    cmake
     gcc
     killall
     neofetch
-    openssh
     wget
-    zip
     git
-    eza
-    neovim
-    fd
-    glow
-    htop
-    jq
-    ripgrep
     tree
     tmux
+    zip
     unrar
     unzip
-    starship
     p7zip
-    pandoc
-    slides
-    openvpn
-    jd-gui
-    teamspeak_client
-    hadolint
-    dbeaver-bin
-    vagrant
   ];
 
   fonts.packages = with pkgs; [
-    fira-code
-    nerdfonts
+      nerd-fonts.fira-code
+      comic-mono
   ];
 }
