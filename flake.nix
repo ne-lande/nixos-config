@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration";
+  description = "sexOS :)";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -9,8 +9,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-ld.url = "github:Mic92/nix-ld";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    nix-ld = {
+      url = "github:Mic92/nix-ld";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     plasma-manager = {
       url = "github:pjones/plasma-manager";
@@ -57,6 +59,14 @@
             home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
             home-manager.users."nelande" = (import ./home/nelande/home-manager.nix {inherit spicetify-nix;});
           }
+        ];
+      };
+
+      "abashed" = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./hosts/abashed/default.nix
+          ./home/honeset/default.nix
         ];
       };
     };

@@ -7,11 +7,8 @@
     username = "nelande";
     homeDirectory = "/home/nelande";
 
-    # desktop
-    # work-related desktop
-    # non-mandatory cli tools
-    # work-specific cli
     packages = with pkgs; [
+      # Desktop day-to-day
       telegram-desktop
       libreoffice-still
       obsidian
@@ -24,6 +21,7 @@
       gimp
       vlc
     ] ++ [
+      # Work-related
       jetbrains.idea-community-bin
       zed-editor
       burpsuite
@@ -31,6 +29,7 @@
       cyberchef
       insomnia
     ] ++ [
+      # Cli day-to-day
       tldr
       eza
       fd
@@ -40,6 +39,7 @@
       bat
       cloc
     ] ++ [
+      # Work-specific
       nmap
       swaks
       nuclei

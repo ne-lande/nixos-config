@@ -1,0 +1,3 @@
+{
+  zerotier.networks = [ ];
+}

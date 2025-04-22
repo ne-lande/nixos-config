@@ -1,4 +1,8 @@
-{ ... }: {
+{ rootPath, ... }:
+let
+  secrets = import ../../../sec.nix;
+in
+{
   networking = {
     enableIPv6 = true;
     hostName = "kasen";
@@ -8,13 +12,23 @@
       interface = "enp6s0";
     };
 
+    # allow any traffic on intranet
+    firewall = {
+      checkReversePath = "loose";
+      trustedInterfaces = [ "ztwfupmdli" "enp6s0" ];
+    };
+
     nameservers = [
       "1.1.1.1"
       "8.8.8.8"
     ];
-    firewall.checkReversePath = "loose";
+
   };
 
+  services.zerotierone = {
+    enable = true;
+    joinNetworks = secrets.zerotier.networks;
+  };
   #services.dnscrypt-proxy2 = {
   #  enable = true;
   #  settings = {

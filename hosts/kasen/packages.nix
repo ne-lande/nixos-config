@@ -7,26 +7,13 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # * Utilities
     home-manager
     xdg-utils
-    unixtools.ifconfig
-    unixtools.netstat
-    unixtools.route
-    unixtools.ping
-    unixtools.xxd
-    unixtools.top
     dos2unix
-    wireguard-tools
-    openvpn
-    openssl
-    openssh
-    dig
     file
     btop
     htop
-    gnumake
-    cmake
-    gcc
     killall
     neofetch
     wget
@@ -37,10 +24,31 @@
     unrar
     unzip
     p7zip
+  ] ++ [
+    # Network utilities
+    mtr
+    dig
+    wireguard-tools
+    openvpn
+    openssl
+    openssh
+    unixtools.ifconfig
+    unixtools.netstat
+    unixtools.route
+    unixtools.ping
+    unixtools.xxd
+    unixtools.top
+    traceroute
+    tcpdump
+  ] ++ [
+    # Build essentials
+    gcc
+    cmake
+    gnumake
   ];
 
   fonts.packages = with pkgs; [
-      nerd-fonts.fira-code
-      comic-mono
+    nerd-fonts.fira-code
+    comic-mono
   ];
 }
