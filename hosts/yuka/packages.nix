@@ -47,6 +47,7 @@
     unrar
     unzip
     starship
+    jetbrains.idea-community
   ];
 
   fonts.packages = with pkgs; [

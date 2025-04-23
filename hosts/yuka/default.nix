@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [
     ./hardware.nix
     ./modules
@@ -31,6 +31,13 @@
   # Enable CUPS to print documents.
   services.printing.enable = false;
   security.rtkit.enable = true;
+
+  services.zerotierone = {
+    enable = true;
+    joinNetworks = [
+      "E4DA7455B28258DA"
+    ];
+  };
 
   system.stateVersion = "23.11"; # Don't change this
 }
