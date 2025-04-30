@@ -1,3 +1,16 @@
+{ config, lib, pkgs, ... }:
+with lib;
 {
-  zerotier.networks = [ ];
+  # Yep, this is the place
+  options.secrets = {
+    zerotier.networks = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+    };
+
+    ssh.public-keys = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+    };
+  };
 }
