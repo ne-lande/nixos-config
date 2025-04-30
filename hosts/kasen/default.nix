@@ -1,9 +1,19 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   imports = [
     ./hardware.nix
-    ./modules
+    ./boot.nix
+    ./nvidia.nix
+    ./sound.nix
+    ./network.nix
     ./packages.nix
   ];
+
+  central = {
+    hostname = "kasen";
+    plasma-wallpaper = config.static.gtfo;
+  };
+
+  DE.plasma.enable = true;
 
   # i wont step on these ever again
   nix = {
@@ -18,18 +28,17 @@
     };
   };
 
-
-  virtualisation.docker.enable = true;
+  # Regional
+  i18n = {
+    defaultLocale = "ru_RU.UTF-8";
+    extraLocaleSettings = {
+      LC_MESSAGES = "C.UTF-8";
+      LC_COLLATE = "C.UTF-8";
+      LC_NUMERIC = "C.UTF-8";
+    };
+  };
 
   time.timeZone = "Europe/Moscow";
-
-  i18n.defaultLocale = "ru_RU.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_MESSAGES = "C.UTF-8";
-    LC_COLLATE = "C.UTF-8";
-    LC_NUMERIC = "C.UTF-8";
-  };
 
   powerManagement.cpuFreqGovernor = "performance";
 

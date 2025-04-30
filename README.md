@@ -1,4 +1,12 @@
-Beforehand, create a `sec.nix` and fill it by example in sec.example.nix
+# Structure
+
+- home - user specific configurations
+- hosts - host specifis configurations
+- modules - preconfigured configurations of apps/cli/services with off/on switch
+- packages - rewriten or niche took of use
+- static - images and etc
+
+# Overview
 
 Hosts:
 |host   |desc   |

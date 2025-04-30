@@ -1,34 +1,48 @@
 { ... }: {
   imports = [
     ./hardware.nix
-    ./modules
     ./packages.nix
+    ./boot.nix
+    ./network.nix
+    ./sound.nix
+    ./nvidia.nix
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  virtualisation.docker.enable = true;
-  time.timeZone = "Europe/Moscow";
-
-  i18n.defaultLocale = "ru_RU.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "ru_RU.UTF-8";
-    LC_IDENTIFICATION = "ru_RU.UTF-8";
-    LC_MEASUREMENT = "ru_RU.UTF-8";
-    LC_MONETARY = "ru_RU.UTF-8";
-    LC_NAME = "ru_RU.UTF-8";
-    LC_NUMERIC = "ru_RU.UTF-8";
-    LC_PAPER = "ru_RU.UTF-8";
-    LC_TELEPHONE = "ru_RU.UTF-8";
-    LC_TIME = "ru_RU.UTF-8";
+  central = {
+    hostname = "kasen";
   };
+
+  DE.gnome.enable = true;
+
+  # Nix Settings
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings = {
+        experimental-features = [ "nix-command" "flakes" ];
+        auto-optimise-store = true;
+    };
+  };
+
+  # Regional
+  i18n = {
+    defaultLocale = "ru_RU.UTF-8";
+    extraLocaleSettings = {
+      LC_MESSAGES = "C.UTF-8";
+      LC_COLLATE = "C.UTF-8";
+      LC_NUMERIC = "C.UTF-8";
+    };
+  };
+
+  time.timeZone = "Europe/Moscow";
 
   powerManagement.cpuFreqGovernor = "performance";
 
-
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
-  # Enable CUPS to print documents.
   services.printing.enable = false;
   security.rtkit.enable = true;
 

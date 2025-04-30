@@ -1,1 +1,2 @@
-sec.nix
+secrets/default.nix
+result

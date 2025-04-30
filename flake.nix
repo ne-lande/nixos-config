@@ -29,44 +29,56 @@
   outputs = inputs@{ nix-ld, nixpkgs, home-manager, plasma-manager, spicetify-nix, ... }:
   let
     system = "x86_64-linux";
+
+    static = import ./static;
+    secrets = import ./secrets;
+    customModules = import ./modules;
+    defaultHomeManager = { config, lib, pkgs, ... }: {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+    };
+    defaultModules = [ customModules home-manager.nixosModules.home-manager defaultHomeManager static secrets ];
   in
   {
     nixosConfigurations = {
       "kasen" = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = [
-          ./hosts/kasen/default.nix
-          ./home/nelande/default.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
-            home-manager.users."nelande" = (import ./home/nelande/home-manager.nix {inherit spicetify-nix;});
-          }
+
+        modules = defaultModules ++ [
+          ./hosts/kasen
+          ./home/nelande
+          { home-manager.sharedModules = [
+              spicetify-nix.homeManagerModules.default
+              plasma-manager.homeManagerModules.plasma-manager
+          ]; }
         ];
+
+        specialArgs = {
+          inherit spicetify-nix;
+        };
       };
 
       "yuka" = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = [
-          ./home/nelande/default.nix
-          ./hosts/yuka/default.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
-            home-manager.users."nelande" = (import ./home/nelande/home-manager.nix {inherit spicetify-nix;});
-          }
+
+        modules = defaultModules ++ [
+          ./hosts/yuka
+          ./home/nelande
+          { home-manager.sharedModules = [
+              spicetify-nix.homeManagerModules.default
+          ]; }
         ];
+
+        specialArgs = {
+          inherit spicetify-nix;
+        };
       };
 
       "abashed" = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = [
-          ./hosts/abashed/default.nix
-          ./home/honeset/default.nix
+        modules = defaultModules ++ [
+          ./hosts/abashed
+          ./home/honeset
         ];
       };
     };
