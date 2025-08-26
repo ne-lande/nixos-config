@@ -20,6 +20,7 @@
     librewolf.enable = true;
     spicetify.enable = true;
     steam.enable = true;
+    zed-editor.enable = true;
   };
 
   users = {
