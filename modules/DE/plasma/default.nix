@@ -24,7 +24,13 @@ in with lib;
         # Enable and configure autologin
     services.displayManager.autoLogin.enable = true;
     services.displayManager.autoLogin.user = username;
-    services.displayManager.defaultSession = "plasmax11"; # plasma for wayland
+    services.displayManager.defaultSession = "plasma"; # plasma for wayland
+
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    };
 
     home-manager.users.${username} = { ... }: {
       programs.plasma = {

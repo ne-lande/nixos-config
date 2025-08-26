@@ -28,7 +28,6 @@ in
       ] ++ [
         # Work-related
         jetbrains.idea-community-bin
-        zed-editor
         burpsuite
         wireshark
         cyberchef
