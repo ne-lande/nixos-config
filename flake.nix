@@ -38,6 +38,7 @@
       home-manager.useUserPackages = true;
     };
     defaultModules = [ customModules home-manager.nixosModules.home-manager defaultHomeManager static secrets ];
+    #customPackages = import ./packages { inherit pkgs; };
   in
   {
     nixosConfigurations = {

@@ -15,6 +15,22 @@
 
   DE.plasma.enable = true;
 
+  programs.firejail = {
+    enable = true;
+    wrappedBinaries = {
+      librewolf = {
+        executable = "${pkgs.librewolf}/bin/librewolf";
+        profile = "${pkgs.firejail}/etc/firejail/librewolf.profile";
+        desktop = "${pkgs.librewolf}/share/applications/librewolf.desktop";
+      };
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+  };
+
   # i wont step on these ever again
   nix = {
     gc = {
@@ -38,6 +54,7 @@
     };
   };
 
+  virtualisation.docker.enable = true;
   time.timeZone = "Europe/Moscow";
 
   powerManagement.cpuFreqGovernor = "performance";

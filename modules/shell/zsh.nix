@@ -40,7 +40,7 @@ in with lib;
             ping = "ping -c 5";
             reload = "source $ZDOTDIR/.zshrc";
             ssh = "kitty +kitten ssh";
-            icat =" kitty +kitten icat";
+            icat = "kitty +kitten icat";
             diff = "kitty +kitten diff";
             untar = "tar xvf";
             cwd = "pwd | tr -d '\r\n' | xclip -selection clipboard";
@@ -49,7 +49,7 @@ in with lib;
             docker-suicide = "docker kill $(docker ps -q); docker rm $(docker ps -aq); docker rmi $(docker images -qa); docker volume rm $(docker volume ls -q)";
         };
 
-        initExtra = ''
+        initContent = ''
             eval "$(starship init zsh)"
         '';
       };

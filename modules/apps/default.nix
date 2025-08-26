@@ -4,5 +4,6 @@
     ./librewolf.nix
     ./steam.nix
     ./spicetify.nix
+    ./zeditor.nix
   ];
 }

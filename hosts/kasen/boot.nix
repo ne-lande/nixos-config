@@ -1,5 +1,10 @@
-{ pkgs, ...}: {
+{ pkgs, config, ...}: {
   boot = {
+    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
+    extraModulePackages = with config.boot.kernelPackages; [
+      amneziawg
+    ];
+
     # Bootloader.
     loader = {
       efi.canTouchEfiVariables = true;

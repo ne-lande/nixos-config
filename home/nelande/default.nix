@@ -12,12 +12,14 @@
   };
 
   apps = {
+    zeditor.enable = true;
     kitty = {
       enable = true;
       background_image = config.static.kitties;
     };
     librewolf.enable = true;
     spicetify.enable = true;
+    steam.enable = true;
   };
 
   users = {
@@ -26,7 +28,7 @@
     users.nelande = {
       isNormalUser = true;
       description = "nelande";
-      extraGroups = [ "wheel" "networkmanager" "docker" ];
+      extraGroups = [ "wheel" "networkmanager" "docker" "audio" ];
     };
   };
 }
