@@ -12,7 +12,6 @@
   };
 
   apps = {
-    zeditor.enable = true;
     kitty = {
       enable = true;
       background_image = config.static.kitties;
