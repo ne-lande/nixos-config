@@ -12,7 +12,12 @@
     hostname = "kasen";
   };
 
+  hardware.enableAllFirmware = true;
+
   DE.gnome.enable = true;
+
+  virtualisation.docker.enable = true;
+  users.extraGroups.docker.members = [ "nelande" ];
 
   # Nix Settings
   nix = {

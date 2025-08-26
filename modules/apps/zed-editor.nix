@@ -3,12 +3,12 @@ let
   username = config.central.username;
 in with lib;
 {
-  options.apps.zeditor = {
+  options.apps.zed-editor = {
     enable = mkEnableOption "enable zed editor";
     background_image = mkOption { type = types.str; };
   };
 
-  config = lib.mkIf config.apps.zeditor.enable {
+  config = lib.mkIf config.apps.zed-editor.enable {
     home-manager.users.${username} = { ... }: {
       programs.zed-editor = {
           enable = true;
