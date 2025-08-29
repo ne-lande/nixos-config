@@ -26,8 +26,8 @@ in with lib;
         antidote = {
             enable = true;
             plugins = [
-            "zsh-users/zsh-syntax-highlighting"
-            "zsh-users/zsh-autosuggestions"
+              "zsh-users/zsh-syntax-highlighting"
+              "zsh-users/zsh-autosuggestions"
             ];
         };
 
@@ -45,8 +45,45 @@ in with lib;
             untar = "tar xvf";
             cwd = "pwd | tr -d '\r\n' | xclip -selection clipboard";
             timer = "echo 'Timer started. Stop with Ctrl-D.' && date && time cat && date";
-            week = "date +%V";
-            docker-suicide = "docker kill $(docker ps -q); docker rm $(docker ps -aq); docker rmi $(docker images -qa); docker volume rm $(docker volume ls -q)";
+        };
+
+        shellGlobalAliases = {
+          ISODATE = "$(date --iso-8601 | tr -d \\n)";
+          UUID = "$(uuidgen | tr -d \\n)";
+        };
+
+        siteFunctions = {
+          killgrep = ''
+            if [ -z "$1" ]; then
+                echo "Usage: killgrep <pattern>"
+                return 1
+            fi
+
+            pids=$(ps aux | grep "$1" | grep -v grep | awk '{print $2}')
+
+            if [ -z "$pids" ]; then
+                echo "No processes found matching '$1'."
+                return 0
+            fi
+
+            count=$(echo "$pids" | wc -w)
+
+            echo "Killing $count process(es): $pids"
+            echo "$pids" | xargs kill -9
+            echo "Done."
+          '';
+          nukedocker = ''
+            echo "Stopping all running containers..."
+            docker kill $(docker ps -q) 2>/dev/null
+
+            echo "Removing all containers..."
+            docker rm $(docker ps -aq) 2>/dev/null
+
+            echo "Removing all images..."
+            docker rmi $(docker images -aq) 2>/dev/null
+
+            echo "Docker cleanup complete."
+          '';
         };
 
         initContent = ''

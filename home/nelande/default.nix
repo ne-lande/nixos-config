@@ -3,6 +3,10 @@
     ./home.nix
   ];
 
+  programs.nh = {
+    enable = true;
+  };
+
   git.enable = true;
   neovim.enable = true;
 

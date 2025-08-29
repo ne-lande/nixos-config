@@ -17,7 +17,6 @@ in with lib;
           vim-surround
           nerdtree
           vim-polyglot
-          YouCompleteMe
           vim-suda
           vim-commentary
         ];
