@@ -61,11 +61,18 @@
         ${iproute2}/bin/ip -n wg route add default dev wg0
 
         # Create proxy
-        ${iproute2}/bin/ip netns exec wg ${tinyproxy}/bin/tinyproxy -d -c tinyproxy.conf
+        ${iproute2}/bin/ip netns exec wg ${tinyproxy}/bin/tinyproxy -c /home/nelande/tinyproxy.conf
       '';
-      ExecStop = with pkgs; writers.writeBash "wg-down" ''
+      ExecStopPost = with pkgs; writers.writeBash "wg-down" ''
+        # Remove tun
+        ${iproute2}/bin/ip link del wg-tun-0
+
+        # Remove awg links
         ${iproute2}/bin/ip -n wg route del default dev wg0
         ${iproute2}/bin/ip -n wg link del wg0
+
+        # Kill tinyproxy
+        ${procps}/bin/pkill -F /tmp/wg-tinyproxy.pid
       '';
     };
   };
