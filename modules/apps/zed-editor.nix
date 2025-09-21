@@ -11,8 +11,19 @@ in with lib;
   config = lib.mkIf config.apps.zed-editor.enable {
     home-manager.users.${username} = { ... }: {
       programs.zed-editor = {
+          extraPackages = with pkgs; [
+            nixd
+            package-version-server
+            terraform-ls
+            pyright
+          ];
+
           enable = true;
-          extensions = ["nix" "php" "toml" "make" "docker-compose" "dockerfile"];
+          extensions = [
+            "nix" "java" "ruby" "dart" "php" "html" "proto"
+            "toml" "make" "docker-compose" "dockerfile" "terraform"
+            "0x96f"
+          ];
 
           userSettings = {
               assistant.enabled = false;
@@ -29,15 +40,6 @@ in with lib;
                   blinking = "off";
                   copy_on_select = false;
                   dock = "right";
-                  detect_venv = {
-                      on = {
-                          directories = [".env" "env" ".venv" "venv"];
-                          activate_script = "default";
-                      };
-                  };
-                  env = {
-                      TERM = "xterm-kitty";
-                  };
                   font_family = "FiraCode Nerd Font";
                   font_features = null;
                   font_size = null;
@@ -59,13 +61,25 @@ in with lib;
                   };
               };
 
+              languages = {
+                  "Nix" = {
+                      language_servers = ["!nil" "nixd"];
+                  };
+                  Python = {
+                    language_servers = [
+                      "pyright"
+                    ];
+                    format_on_save = "on";
+                  };
+              };
+
               vim_mode = false;
               load_direnv = "shell_hook";
               base_keymap = "VSCode";
               theme = {
                   mode = "system";
                   light = "One Light";
-                  dark = "One Dark";
+                  dark = "0x96f Theme";
               };
 
               show_whitespaces = "selection";
