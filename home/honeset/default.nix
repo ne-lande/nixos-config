@@ -1,4 +1,5 @@
-{ pkgs, config, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ./home.nix
   ];
@@ -7,8 +8,7 @@
   neovim.enable = true;
 
   shell = {
-    zsh.enable = true;
-    starship.enable = true;
+    fish.enable = true;
   };
 
   users = {
@@ -18,7 +18,12 @@
     users.honeset = {
       isNormalUser = true;
       description = "honeset";
-      extraGroups = [ "wheel" "networkmanager" "docker" "no-internet" ];
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "docker"
+        "no-internet"
+      ];
     };
   };
 }

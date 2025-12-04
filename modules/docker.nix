@@ -1,21 +1,21 @@
-{ config, lib, pkgs, types, ... }:
+{ config, lib, ... }:
 let
   metrics-default-addr = "0.0.0.0:4200";
-in with lib;
+in
+with lib;
 {
   options.docker = {
     enable = mkEnableOption "enable docker";
   };
 
   config = mkIf config.docker.enable {
-    virtualisation = {
-      docker = {
-        enable = true;
-        daemon.settings = {
-          userland-proxy = false;
-          experimental = true;
-          metrics-addr = metrics-default-addr;
-        };
+    virtualisation.docker.rootless = {
+      enable = true;
+      setSocketVariable = true;
+      daemon.settings = {
+        userland-proxy = false;
+        experimental = true;
+        metrics-addr = metrics-default-addr;
       };
     };
   };

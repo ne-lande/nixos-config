@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   imports = [
     ./hardware.nix
     ./boot.nix
@@ -15,17 +16,6 @@
 
   DE.plasma.enable = true;
 
-  programs.firejail = {
-    enable = true;
-    wrappedBinaries = {
-      librewolf = {
-        executable = "${pkgs.librewolf}/bin/librewolf";
-        profile = "${pkgs.firejail}/etc/firejail/librewolf.profile";
-        desktop = "${pkgs.librewolf}/share/applications/librewolf.desktop";
-      };
-    };
-  };
-
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
@@ -39,8 +29,11 @@
       options = "--delete-older-than 30d";
     };
     settings = {
-        experimental-features = [ "nix-command" "flakes" ];
-        auto-optimise-store = true;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      auto-optimise-store = true;
     };
   };
 
@@ -52,6 +45,46 @@
       LC_COLLATE = "C.UTF-8";
       LC_NUMERIC = "C.UTF-8";
     };
+  };
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        # Shows battery charge of connected devices on supported
+        # Bluetooth adapters. Defaults to 'false'.
+        Experimental = true;
+        # When enabled other devices can connect faster to us, however
+        # the tradeoff is increased power consumption. Defaults to
+        # 'false'.
+        FastConnectable = true;
+      };
+      Policy = {
+        # Enable all controllers when they are found. This includes
+        # adapters present on start as well as adapters that are plugged
+        # in later on. Defaults to 'true'.
+        AutoEnable = true;
+      };
+    };
+  };
+
+  systemd.services.mpd.environment = {
+    # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
+    XDG_RUNTIME_DIR = "/run/user/1000"; # User-id must match above user. MPD will look inside this directory for the PipeWire socket.
+  };
+  services.mpd = {
+    enable = true;
+    user = "nelande";
+    group = "audio";
+    musicDirectory = "/stor/Music";
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "My PipeWire Output"
+      }
+    '';
   };
 
   virtualisation.docker.enable = true;

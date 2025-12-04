@@ -1,12 +1,16 @@
-{ config, lib, pkgs, types, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 with lib;
 {
   options.ssh = {
-    enable = mkEnableOption "enable neovim";
+    enable = mkEnableOption "enable ssh";
   };
 
   config = mkIf config.ssh.enable {
-    users.groups.ssh-user = {};
+    users.groups.ssh-user = { };
 
     services.openssh = {
       enable = true;

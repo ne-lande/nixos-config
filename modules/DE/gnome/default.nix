@@ -1,8 +1,13 @@
-{ config, lib, pkgs, types, nixpkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 {
   options.DE.gnome = {
-    enable = lib.mkEnableOption "enable gnome";
+    enable = mkEnableOption "enable gnome";
   };
 
   config = mkIf config.DE.gnome.enable {

@@ -1,27 +1,35 @@
-{ config, lib, pkgs, types, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   username = config.central.username;
-in with lib;
+in
+with lib;
 {
   options.neovim = {
     enable = mkEnableOption "enable neovim";
   };
 
   config = mkIf config.neovim.enable {
-    home-manager.users.${username} = { ... }: {
-      programs.neovim = {
-        enable = true;
-        plugins = with pkgs.vimPlugins; [
-          vim-airline
-          vim-airline-themes
-          vim-surround
-          nerdtree
-          vim-polyglot
-          vim-suda
-          vim-commentary
-        ];
+    home-manager.users.${username} =
+      { ... }:
+      {
+        programs.neovim = {
+          enable = true;
+          plugins = with pkgs.vimPlugins; [
+            vim-airline
+            vim-airline-themes
+            vim-surround
+            nerdtree
+            vim-polyglot
+            vim-suda
+            vim-commentary
+          ];
 
-        extraConfig = ''
+          extraConfig = ''
             syntax on
 
             set clipboard=unnamedplus
@@ -55,8 +63,8 @@ in with lib;
             let g:ycm_extra_conf_globlist = 1
             let g:ycm_confirm_extra_conf = 1
             let g:ycm_auto_trigger = 1
-        '';
+          '';
+        };
       };
-    };
   };
 }
