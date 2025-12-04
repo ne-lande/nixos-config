@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ ... }:
+{
   imports = [
     ./central.nix
     ./docker.nix
@@ -6,9 +7,10 @@
     ./git.nix
     ./neovim.nix
     ./virt-manager.nix
-    ./shell
+    ./fish.nix
     ./DE/gnome
     ./DE/plasma
     ./apps
+    ./lists.nix
   ];
 }

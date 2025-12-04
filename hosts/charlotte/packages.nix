@@ -1,18 +1,15 @@
-{ pkgs, ... }:
-{
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowBroken = true;
+{ pkgs, ... }: {
+ nixpkgs.config = {
+    allowUnfree = false;
+    allowBroken = false;
     allowInsecure = false;
-    allowUnsupportedSystem = true;
-  };
+    allowUnsupportedSystem = false;
+ };
 
   environment.systemPackages = with pkgs; [
     home-manager
-    vesktop
     telegram-desktop
     obsidian
-    librewolf
     cloc
     insomnia
     unixtools.xxd
@@ -21,11 +18,8 @@
     unixtools.ping
     unixtools.netstat
     unixtools.ifconfig
-    libreoffice-still
-    prismlauncher
     openssl
     dos2unix
-    zed-editor
     dig
     gnumake
     file

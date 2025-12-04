@@ -1,7 +1,8 @@
-{ config, lib, pkgs, ... }:
-let
-  cfg = config.central;
-in with lib;
+{
+  lib,
+  ...
+}:
+with lib;
 {
   # Dont set defaults, user must explicilty set them in home configurations!
   options.central = {

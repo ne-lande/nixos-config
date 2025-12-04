@@ -1,2 +1,4 @@
-secrets/default.nix
+secrets/*
+!secrets/default.nix
+!secrets/default.example.nix
 result

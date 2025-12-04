@@ -1,4 +1,4 @@
-{ config, lib, pkgs, types, ... }:
+{ config, lib, ... }:
 with lib;
 {
   options.apps.steam = {

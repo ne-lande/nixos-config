@@ -1,4 +1,5 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }:
+{
   imports = [
     ./home.nix
   ];
@@ -12,7 +13,6 @@
 
   shell = {
     zsh.enable = true;
-    starship.enable = true;
   };
 
   apps = {
@@ -21,10 +21,14 @@
       background_image = config.static.kitties;
     };
     librewolf.enable = true;
-    spicetify.enable = true;
-    steam.enable = true;
-    zed-editor.enable = true;
   };
+
+  ## A lot of here is closed-source so configs are kept as a secret too
+  secrets.modules.osquery = {
+    enable = true;
+    blockedDirectories = "/nix/store";
+  };
+  secrets.modules.skotty.enable = true;
 
   users = {
     defaultUserShell = pkgs.zsh;
@@ -32,7 +36,13 @@
     users.nelande = {
       isNormalUser = true;
       description = "nelande";
-      extraGroups = [ "wheel" "networkmanager" "docker" "audio" ];
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "docker"
+        "audio"
+        "tss"
+      ];
     };
   };
 }
