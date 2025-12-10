@@ -5,7 +5,7 @@ in
 with lib;
 {
   options.apps.kitty = {
-    enable = mkEnableOption "enable docker";
+    enable = mkEnableOption "enable kitty";
     background_image = mkOption { type = types.str; };
   };
 
@@ -16,7 +16,7 @@ with lib;
         programs.kitty = {
           enable = true;
           font.name = "FiraCode Nerd Font Mono";
-          shellIntegration.enableZshIntegration = true;
+          shellIntegration.enableFishIntegration = true;
           themeFile = "Apprentice";
 
           keybindings = {

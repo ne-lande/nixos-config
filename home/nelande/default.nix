@@ -18,10 +18,17 @@ in
     };
 
   programs.nh.enable = true;
-
+  docker.enable = true;
+  kube.enable = true;
   lists.enable = true;
   git.enable = true;
   neovim.enable = true;
+  music = {
+    enable = true;
+    address = "127.0.0.1";
+    port = 6600;
+  };
+  video.enable = true;
 
   shell = {
     fish.enable = true;
