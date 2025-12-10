@@ -1,6 +1,12 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   metrics-default-addr = "0.0.0.0:4200";
+  username = config.central.username;
 in
 with lib;
 {
@@ -9,14 +15,25 @@ with lib;
   };
 
   config = mkIf config.docker.enable {
-    virtualisation.docker.rootless = {
+    users.extraGroups.docker.members = [ username ];
+
+    virtualisation.docker = {
       enable = true;
-      setSocketVariable = true;
-      daemon.settings = {
-        userland-proxy = false;
-        experimental = true;
-        metrics-addr = metrics-default-addr;
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+        daemon.settings = {
+          userland-proxy = false;
+          experimental = true;
+          metrics-addr = metrics-default-addr;
+        };
       };
     };
+
+    environment.systemPackages = with pkgs; [
+      dive
+      dtop
+      dry
+    ];
   };
 }

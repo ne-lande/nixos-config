@@ -4,19 +4,22 @@
   config,
   ...
 }:
-# These are packages without configuration and installed as packages
 let
-  username = config.central.username;
   packages = with pkgs; {
+    fonts = [
+      nerd-fonts.fantasque-sans-mono
+      nerd-fonts.fira-code
+      comic-mono
+      mplus-outline-fonts.githubRelease
+    ];
+
     apps-base = [
       telegram-desktop
       libreoffice-still
       teamspeak6-client
       prismlauncher
-      obsidian
       kdePackages.francis
       gimp
-      mpv
     ];
 
     apps-work = [
@@ -39,8 +42,7 @@ let
     cli-net = [
       mtr
       dig
-      wireguard-tools
-      openvpn
+      wget
       openssl
       openssh
       unixtools.ifconfig
@@ -52,6 +54,7 @@ let
     ];
 
     cli-misc = [
+      neofetch
       unixtools.top
       unixtools.xxd
       p7zip
@@ -62,23 +65,19 @@ let
     ];
 
     cli-base = [
+      tree
+      file
       btop
       git
-      gcc
-      cmake
+      just
       gnumake
       file
       tldr
-      eza
-      fd
-      ripgrep
-      bat
       cloc
     ];
   };
 in
 {
-
   options.lists = with lib; {
     enable = mkEnableOption "Enable package lists";
   };
@@ -86,16 +85,21 @@ in
   config =
     with lib;
     mkIf config.lists.enable {
-      home-manager.users.${username} =
-        { ... }:
-        {
-          home.packages =
-            packages.apps-base
-            ++ packages.apps-work
-            ++ packages.cli-work
-            ++ packages.cli-net
-            ++ packages.cli-misc
-            ++ packages.cli-base;
-        };
+      nixpkgs.config = {
+        allowUnfree = true;
+        allowBroken = true;
+        allowInsecure = false;
+        allowUnsupportedSystem = true;
+      };
+
+      fonts.packages = packages.fonts;
+
+      environment.systemPackages =
+        packages.apps-base
+        ++ packages.apps-work
+        ++ packages.cli-work
+        ++ packages.cli-net
+        ++ packages.cli-misc
+        ++ packages.cli-base;
     };
 }

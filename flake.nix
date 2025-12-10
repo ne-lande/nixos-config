@@ -26,14 +26,12 @@
     let
       system = "x86_64-linux";
 
+      #mylib = import ./lib { inherit lib; };
       static = import ./static;
       secrets = import ./secrets;
       customModules = import ./modules;
       defaultHomeManager =
         {
-          config,
-          lib,
-          pkgs,
           ...
         }:
         {
@@ -46,8 +44,8 @@
         defaultHomeManager
         static
         secrets
+        #mylib
       ];
-      #customPackages = import ./packages { inherit pkgs; };
     in
     {
       nixosConfigurations = {

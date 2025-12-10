@@ -1,16 +1,21 @@
 { ... }:
 {
   imports = [
+    ./DE
+    ./apps
+    ./network
     ./central.nix
     ./docker.nix
-    ./ssh.nix
-    ./git.nix
-    ./neovim.nix
-    ./virt-manager.nix
     ./fish.nix
-    ./DE/gnome
-    ./DE/plasma
-    ./apps
+    ./git.nix
+    ./kube.nix
     ./lists.nix
+    ./music.nix
+    ./neovim.nix
+    ./nix.nix
+    ./osquery.nix
+    ./ssh.nix
+    ./video.nix
+    ./virt-manager.nix
   ];
 }

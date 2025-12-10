@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -14,6 +15,12 @@ with lib;
   };
 
   config = mkIf config.shell.fish.enable {
+    environment.systemPackages = with pkgs; [
+      eza
+      fd
+      ripgrep
+      bat
+    ];
 
     programs.fish.enable = true;
     home-manager.users.${username} =
@@ -89,7 +96,8 @@ with lib;
           };
           shellAbbrs = { };
           shellAliases = {
-            bat = "bat --style=numbers --paging never";
+            find = "fd";
+            cat = "bat --style=numbers --paging never";
             ls = "eza --icons=always";
             c = "clear";
             grep = "grep --color=auto";

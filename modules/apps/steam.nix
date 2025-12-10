@@ -2,7 +2,7 @@
 with lib;
 {
   options.apps.steam = {
-    enable = mkEnableOption "enable docker";
+    enable = mkEnableOption "enable steam";
   };
 
   config = mkIf config.apps.steam.enable {

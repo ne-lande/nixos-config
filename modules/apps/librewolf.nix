@@ -9,7 +9,7 @@ in
 with lib;
 {
   options.apps.librewolf = {
-    enable = mkEnableOption "enable docker";
+    enable = mkEnableOption "enable librewolf";
   };
 
   config = mkIf config.apps.librewolf.enable {
@@ -25,7 +25,43 @@ with lib;
             "privacy.clearOnShutdown.history" = false;
             "privacy.clearOnShutdown.cookies" = false;
             "network.cookie.lifetimePolicy" = 100;
-            "identity.fxaccounts.enabled" = true;
+            "identity.fxaccounts.enabled" = false;
+          };
+          policies = {
+            BlockAboutConfig = true;
+            DefaultDownloadDirectory = "\${home}/Downloads";
+            ExtensionSettings = {
+              "uBlock0@raymondhill.net" = {
+                default_area = "menupanel";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+                installation_mode = "force_installed";
+                private_browsing = true;
+              };
+              "Bitwarden" = {
+                default_area = "menupanel";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
+                installation_mode = "force_installed";
+                private_browsing = true;
+              };
+              "CanvasBlocker" = {
+                default_area = "menupanel";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/canvasblocker/latest.xpi";
+                installation_mode = "force_installed";
+                private_browsing = true;
+              };
+              "FoxyProxy" = {
+                default_area = "menupanel";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/foxyproxy-standard/latest.xpi";
+                installation_mode = "force_installed";
+                private_browsing = true;
+              };
+              "Sidebery" = {
+                default_area = "menupanel";
+                install_url = "https://addons.mozilla.org/firefox/downloads/latest/sidebery/latest.xpi";
+                installation_mode = "force_installed";
+                private_browsing = true;
+              };
+            };
           };
         };
       };

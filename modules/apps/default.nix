@@ -1,11 +1,14 @@
 { ... }:
 {
+  #imports = mylib.scanPaths ./.;
   imports = [
     ./kitty.nix
     ./librewolf.nix
-    ./steam.nix
-    ./zed-editor.nix
-    ./vesktop.nix
+    #"./lwchrome.nix"
+    #"./obs-studio.nix"
     ./obsidian.nix
+    ./steam.nix
+    ./vesktop.nix
+    ./zed-editor.nix
   ];
 }
