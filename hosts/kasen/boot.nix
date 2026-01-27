@@ -1,6 +1,6 @@
-{ pkgs, config, ...}: {
+{ pkgs, config, ... }:
+{
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
     extraModulePackages = with config.boot.kernelPackages; [
       amneziawg
     ];
@@ -17,7 +17,10 @@
       };
     };
 
-    initrd.luks.devices."luks-9ae22b1f-5984-45a2-8375-ff4c490077e9".device = "/dev/disk/by-uuid/9ae22b1f-5984-45a2-8375-ff4c490077e9";
+    initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
+
+    initrd.luks.devices."luks-9ae22b1f-5984-45a2-8375-ff4c490077e9".device =
+      "/dev/disk/by-uuid/9ae22b1f-5984-45a2-8375-ff4c490077e9";
 
     plymouth = {
       enable = true;
@@ -41,12 +44,12 @@
   };
 
   fileSystems."/stor" = {
-   device = "/dev/disk/by-uuid/59645dd4-8f7f-46f6-b79b-835aef96577c";
-   fsType = "btrfs";
-   options = [
-     "users"
-     "nofail"
-     "exec"
-   ];
+    device = "/dev/disk/by-uuid/59645dd4-8f7f-46f6-b79b-835aef96577c";
+    fsType = "btrfs";
+    options = [
+      "users"
+      "nofail"
+      "exec"
+    ];
   };
 }

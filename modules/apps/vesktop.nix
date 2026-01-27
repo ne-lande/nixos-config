@@ -16,7 +16,7 @@ with lib;
 
   config = mkIf config.apps.vesktop.enable {
     security.sudo.extraConfig = ''
-      ALL ALL=(ALL) NOPASSWD:SETENV: ${nixpath}/ip netns exec wg sudo -u ${username} -E ${homepath}/vesktop --ozone-platform=wayland
+      ALL ALL=(ALL) NOPASSWD:SETENV: ${nixpath}/ip netns exec wg sudo -u ${username} -E ${homepath}/vesktop
     '';
 
     home-manager.users.${username} =
@@ -28,7 +28,7 @@ with lib;
             "InstantMessaging"
             "Chat"
           ];
-          exec = ''sudo -E ${nixpath}/ip netns exec wg sudo -u ${username} -E ${homepath}/vesktop --ozone-platform=wayland'';
+          exec = ''sudo -E ${nixpath}/ip netns exec wg sudo -u ${username} -E ${homepath}/vesktop'';
           genericName = "Internet Messenger";
           icon = "vesktop";
           name = "Vesktop [NETNS]";

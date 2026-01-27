@@ -38,15 +38,15 @@ with lib;
       enable = true;
       user = username;
       group = "audio";
-      musicDirectory = config.music.musicDirectory;
-      extraConfig = ''
-        audio_output {
-          type "pipewire"
-          name "My PipeWire Output"
-        }
-      '';
-      network = {
-        listenAddress = config.music.address;
+      settings = {
+        audio_output = [
+          {
+            type = "pipewire";
+            name = "My PipeWire Output";
+          }
+        ];
+        music_directory = config.music.musicDirectory;
+        bind_to_address = config.music.address;
         port = config.music.port;
       };
     };

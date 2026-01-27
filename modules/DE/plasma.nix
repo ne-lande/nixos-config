@@ -15,7 +15,7 @@ with lib;
   };
 
   config = mkIf config.DE.plasma.enable {
-    services.xserver.enable = true;
+    #services.xserver.enable = true;
 
     # Enable the KDE Plasma Desktop Environment.
     services.displayManager.sddm.wayland.enable = true;
@@ -27,14 +27,15 @@ with lib;
     ];
 
     # Configure keymap in X11
-    services.xserver.xkb = {
-      layout = "us,ru";
-      variant = "";
-    };
+    #services.xserver.xkb = {
+    #  layout = "us,ru";
+    #  variant = "";
+    #};
 
     # Enable and configure autologin
     services.displayManager.autoLogin.enable = true;
     services.displayManager.autoLogin.user = username;
+    services.displayManager.sddm.settings.General.DisplayServer = "wayland";
     services.displayManager.defaultSession = "plasma"; # plasma for wayland
 
     xdg.portal = {
