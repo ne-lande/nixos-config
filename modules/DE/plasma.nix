@@ -15,28 +15,30 @@ with lib;
   };
 
   config = mkIf config.DE.plasma.enable {
-    #services.xserver.enable = true;
+    # Configure keymap in X11
+    services.xserver = {
+      enable = true;
+      xkb = {
+        layout = "us,ru";
+        variant = "";
+      };
+    };
 
-    # Enable the KDE Plasma Desktop Environment.
-    services.displayManager.sddm.wayland.enable = true;
+    # Enable and configure autologin
     services.desktopManager.plasma6.enable = true;
+    services.displayManager = {
+      sddm.settings.General.DisplayServer = "x11-user"; # wayland
+      # sddm.wayland.enable = true;
+      defaultSession = "plasmax11"; # plasma
+      autoLogin.enable = true;
+      autoLogin.user = username;
+    };
+
     environment.plasma6.excludePackages = with pkgs.kdePackages; [
       elisa
       konsole
       kate
     ];
-
-    # Configure keymap in X11
-    #services.xserver.xkb = {
-    #  layout = "us,ru";
-    #  variant = "";
-    #};
-
-    # Enable and configure autologin
-    services.displayManager.autoLogin.enable = true;
-    services.displayManager.autoLogin.user = username;
-    services.displayManager.sddm.settings.General.DisplayServer = "wayland";
-    services.displayManager.defaultSession = "plasma"; # plasma for wayland
 
     xdg.portal = {
       enable = true;

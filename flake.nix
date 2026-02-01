@@ -3,6 +3,23 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+
+    bpf = {
+      url = "git+ssh://git@binarybears-notes.ru:2424/tools/bpf.git";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+
+    ipoc = {
+      url = "git+ssh://git@binarybears-notes.ru:2424/tools/ida-pro-on-crack.git";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -21,6 +38,8 @@
       nixpkgs,
       home-manager,
       plasma-manager,
+      bpf,
+      ipoc,
       ...
     }:
     let
@@ -30,6 +49,7 @@
       static = import ./static;
       secrets = import ./secrets;
       customModules = import ./modules;
+      mypacks = import ./packages { inherit inputs; };
       defaultHomeManager =
         {
           ...
@@ -39,6 +59,7 @@
           home-manager.useUserPackages = true;
         };
       defaultModules = [
+        mypacks
         customModules
         home-manager.nixosModules.home-manager
         defaultHomeManager

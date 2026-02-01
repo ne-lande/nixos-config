@@ -1,5 +1,28 @@
 {
   "nodes": {
+    "bpf": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769815701,
+        "narHash": "sha256-jE87VUDQsoOJVKyMJoWKNLjo+IA+DgsWF61OSjlS0us=",
+        "ref": "refs/heads/main",
+        "rev": "782dedc604fedcd9d27d032fc0e140030575cfa2",
+        "revCount": 27,
+        "type": "git",
+        "url": "ssh://git@binarybears-notes.ru:2424/tools/bpf.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@binarybears-notes.ru:2424/tools/bpf.git"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -20,6 +43,29 @@
         "type": "github"
       }
     },
+    "ipoc": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769957834,
+        "narHash": "sha256-M1f6my0QL4vz+8B8QS/Yhvb08ET0yyRWseW9J3V6xKA=",
+        "ref": "refs/heads/main",
+        "rev": "01876e0ee4cf0570a719c1d0163a3c94d387da4e",
+        "revCount": 2,
+        "type": "git",
+        "url": "ssh://git@binarybears-notes.ru:2424/tools/ida-pro-on-crack.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@binarybears-notes.ru:2424/tools/ida-pro-on-crack.git"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1769170682,
@@ -32,6 +78,22 @@
       "original": {
         "owner": "nixos",
         "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1767364772,
+        "narHash": "sha256-fFUnEYMla8b7UKjijLnMe+oVFOz6HjijGGNS1l7dYaQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "16c7794d0a28b5a37904d55bcca36003b9109aaa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -61,9 +123,30 @@
     },
     "root": {
       "inputs": {
+        "bpf": "bpf",
         "home-manager": "home-manager",
+        "ipoc": "ipoc",
         "nixpkgs": "nixpkgs",
-        "plasma-manager": "plasma-manager"
+        "plasma-manager": "plasma-manager",
+        "treefmt-nix": "treefmt-nix"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1769691507,
+        "narHash": "sha256-8aAYwyVzSSwIhP2glDhw/G0i5+wOrren3v6WmxkVonM=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "28b19c5844cc6e2257801d43f2772a4b4c050a1b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
       }
     }
   },
