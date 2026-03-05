@@ -14,17 +14,6 @@ with lib;
       {
         programs.obsidian = {
           enable = true;
-          defaultSettings = {
-            app = {
-
-            };
-            communityPlugins = [
-
-            ];
-            corePlugins = [
-
-            ];
-          };
         };
       };
   };

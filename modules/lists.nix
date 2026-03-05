@@ -1,10 +1,13 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
   ...
 }:
 let
+  system = "x86_64-linux";
+
   packages = with pkgs; {
     fonts = [
       nerd-fonts.fantasque-sans-mono
@@ -16,7 +19,7 @@ let
     apps-base = [
       telegram-desktop
       libreoffice-still
-      teamspeak6-client
+      #teamspeak6-client
       prismlauncher
       kdePackages.francis
       gimp
@@ -25,9 +28,13 @@ let
     apps-work = [
       wireshark
       cyberchef
-      #caido
+      # wait until katok pack it
+      # caido
       imhex
-      ghidra
+      # no more ghidra
+      # ghidra
+      inputs.bpf.packages.${system}.burpsuitepro
+      inputs.ipoc.packages.${system}.idapro
     ];
 
     cli-work = [
@@ -54,7 +61,7 @@ let
     ];
 
     cli-misc = [
-      neofetch
+      fastfetch
       unixtools.top
       unixtools.xxd
       p7zip
@@ -66,7 +73,6 @@ let
 
     cli-base = [
       tree
-      file
       btop
       git
       just

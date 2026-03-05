@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
+    # not free, dont try
     bpf = {
       url = "git+ssh://git@binarybears-notes.ru:2424/tools/bpf.git";
       inputs = {
@@ -13,6 +14,7 @@
       };
     };
 
+    # not free, dont try
     ipoc = {
       url = "git+ssh://git@binarybears-notes.ru:2424/tools/ida-pro-on-crack.git";
       inputs = {
@@ -28,8 +30,15 @@
 
     plasma-manager = {
       url = "github:pjones/plasma-manager";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
+
+    zed = {
+      url = "github:zed-industries/zed";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
   };
 
@@ -40,6 +49,7 @@
       plasma-manager,
       bpf,
       ipoc,
+      zed,
       ...
     }:
     let
@@ -49,17 +59,19 @@
       static = import ./static;
       secrets = import ./secrets;
       customModules = import ./modules;
-      mypacks = import ./packages { inherit inputs; };
-      defaultHomeManager =
-        {
-          ...
-        }:
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
+      #mypacks = import ./packages { inherit inputs; };
+      defaultHomeManager = { inputs, ... }: {
+          home-manager = {
+            extraSpecialArgs = { inherit inputs; };
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            sharedModules = [
+              plasma-manager.homeModules.plasma-manager
+            ];
+          };
         };
       defaultModules = [
-        mypacks
+        #mypacks
         customModules
         home-manager.nixosModules.home-manager
         defaultHomeManager
@@ -72,15 +84,11 @@
       nixosConfigurations = {
         "kasen" = nixpkgs.lib.nixosSystem {
           inherit system;
+          specialArgs = { inherit inputs; };
 
           modules = defaultModules ++ [
             ./hosts/kasen
             ./home/nelande
-            {
-              home-manager.sharedModules = [
-                plasma-manager.homeModules.plasma-manager
-              ];
-            }
           ];
         };
 

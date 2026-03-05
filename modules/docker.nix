@@ -17,6 +17,7 @@ with lib;
   config = mkIf config.docker.enable {
     users.extraGroups.docker.members = [ username ];
 
+    hardware.nvidia-container-toolkit.enable = true;
     virtualisation.docker = {
       enable = true;
       rootless = {
@@ -25,6 +26,7 @@ with lib;
         daemon.settings = {
           userland-proxy = false;
           experimental = true;
+          features.cdi = true;
           metrics-addr = metrics-default-addr;
         };
       };

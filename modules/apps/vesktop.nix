@@ -7,6 +7,7 @@ let
   username = config.central.username;
   nixpath = "/run/current-system/sw/bin";
   homepath = "/etc/profiles/per-user/${username}/bin";
+  vesktop = "${nixpath}/ip netns exec awg sudo -u ${username} -E ${homepath}/vesktop";
 in
 with lib;
 {
@@ -16,7 +17,7 @@ with lib;
 
   config = mkIf config.apps.vesktop.enable {
     security.sudo.extraConfig = ''
-      ALL ALL=(ALL) NOPASSWD:SETENV: ${nixpath}/ip netns exec wg sudo -u ${username} -E ${homepath}/vesktop
+      ALL ALL=(ALL) NOPASSWD:SETENV: ${vesktop}
     '';
 
     home-manager.users.${username} =
@@ -28,7 +29,7 @@ with lib;
             "InstantMessaging"
             "Chat"
           ];
-          exec = ''sudo -E ${nixpath}/ip netns exec wg sudo -u ${username} -E ${homepath}/vesktop'';
+          exec = "sudo -E ${vesktop}";
           genericName = "Internet Messenger";
           icon = "vesktop";
           name = "Vesktop [NETNS]";
@@ -51,7 +52,7 @@ with lib;
             customTitleBar = false;
             disableMinSize = true;
             minimizeToTray = false;
-            tray = false;
+            tray = true;
             splashBackground = "#000000";
             splashColor = "#ffffff";
             splashTheming = true;
@@ -63,9 +64,9 @@ with lib;
             settings = {
               frameless = false;
               transparent = false;
-              autoUpdate = false;
-              autoUpdateNotification = false;
-              notifyAboutUpdates = false;
+              autoUpdate = true;
+              autoUpdateNotification = true;
+              notifyAboutUpdates = true;
               useQuickCss = true;
               disableMinSize = true;
               winNativeTitleBar = false;

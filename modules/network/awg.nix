@@ -1,0 +1,161 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib;
+{
+  options.network.awg = {
+    enable = mkEnableOption "enable awg";
+    awg = mkOption {
+      type = types.str;
+      description = "Path to the AWG configuration file";
+    };
+    outIp = mkOption {
+      type = types.str;
+      default = "10.0.0.2/24";
+      description = "IP address for the AWG output interface";
+    };
+    tinyProxyConf = mkOption {
+      type = types.lines;
+      default = ''
+        User nobody
+        Group nogroup
+        Port 8888
+        Listen 10.0.0.2
+        Timeout 600
+        Allow 10.0.0.1
+        Allow 127.0.0.1
+        PidFile "/tmp/wg-tinyproxy.pid"
+      '';
+      description = "Path to the tinyproxy configuration file";
+    };
+  };
+
+  config = mkIf config.network.awg.enable (
+    let
+      tinyproxyConfFile = pkgs.writeText "tinyproxy-awg.conf" config.network.awg.tinyProxyConf;
+      awg-run = pkgs.writeShellScriptBin "awg-run" ''
+        set -euo pipefail
+
+        NETNS="awg"
+
+        if [ $# -eq 0 ]; then
+          echo "Usage: awg-run <command> [args...]"
+          exit 1
+        fi
+
+        USER_NAME="''${SUDO_USER:?must be run via sudo}"
+
+        if ! ${pkgs.iproute2}/bin/ip netns list | grep -q "^awg"; then
+          echo "awg netns not running"
+          exit 1
+        fi
+
+        exec ${pkgs.iproute2}/bin/ip netns exec "$NETNS" /run/wrappers/bin/sudo -u "$USER_NAME" -E -- "$@"
+      '';
+    in
+    {
+
+      environment.systemPackages = with pkgs; [
+        amneziawg-go
+        amneziawg-tools
+        awg-run
+      ];
+
+      security.sudo = {
+        extraRules = [
+          {
+            commands = [
+              {
+                command = "${pkgs.systemd}/bin/systemctl start awg";
+                options = [
+                  "NOPASSWD"
+                ];
+              }
+              {
+                command = "${pkgs.systemd}/bin/systemctl stop awg";
+                options = [
+                  "NOPASSWD"
+                ];
+              }
+              {
+                command = "${awg-run}";
+                options = [
+                  "NOPASSWD"
+                  "SETENV"
+                ];
+              }
+            ];
+            users = [ "ALL" ];
+          }
+        ];
+      };
+
+      systemd.services."netns@" = {
+        description = "%I network namespace";
+        before = [ "network.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${pkgs.iproute2}/bin/ip netns add %I";
+          ExecStop = "${pkgs.iproute2}/bin/ip netns del %I";
+        };
+      };
+
+      systemd.services.awg = {
+        description = "awg netns";
+        bindsTo = [ "netns@awg.service" ];
+        requires = [ "network-online.target" ];
+        after = [ "netns@awg.service" ];
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          RemainAfterExit = true;
+
+          ExecStart =
+            with pkgs;
+            writers.writeBash "awg-up" ''
+              set -e
+
+              # Set tun to default ns
+              ${iproute2}/bin/ip link add awg-tun-0 type veth peer name awg-tun-1
+              ${iproute2}/bin/ip link set awg-tun-1 netns awg
+              ${iproute2}/bin/ip addr add 10.0.0.1/24 dev awg-tun-0
+              ${iproute2}/bin/ip link set dev awg-tun-0 up
+              ${iproute2}/bin/ip -n awg addr add 10.0.0.2/24 dev awg-tun-1
+              ${iproute2}/bin/ip -n awg link set dev awg-tun-1 up
+
+              # Create AWG tun
+              /run/wrappers/bin/sudo ${amneziawg-go}/bin/amneziawg-go awg0
+              # unless kernel module is supported on 6.19
+              # https://github.com/amnezia-vpn/amneziawg-linux-kernel-module/issues/143
+              # $\{iproute2}/bin/ip link add wg0 type amneziawg
+              ${iproute2}/bin/ip link set awg0 netns awg
+              ${iproute2}/bin/ip -n awg address add ${config.network.awg.outIp} dev awg0
+              ${iproute2}/bin/ip netns exec awg ${amneziawg-tools}/bin/awg setconf awg0 ${config.network.awg.awg}
+              ${iproute2}/bin/ip -n awg link set awg0 up
+              ${iproute2}/bin/ip -n awg route add default dev awg0
+
+              # Create proxy
+              ${iproute2}/bin/ip netns exec awg ${tinyproxy}/bin/tinyproxy -c ${tinyproxyConfFile}
+            '';
+          ExecStopPost =
+            with pkgs;
+            writers.writeBash "awg-down" ''
+              # Remove tun
+              ${iproute2}/bin/ip link del awg-tun-0
+
+              # Remove awg links
+              ${iproute2}/bin/ip -n awg route del default dev awg0
+              /run/wrappers/bin/sudo ${iproute2}/bin/ip -n awg link del awg0
+
+              # Kill tinyproxy
+              ${procps}/bin/pkill -F /tmp/wg-tinyproxy.pid
+            '';
+        };
+      };
+    }
+  );
+}

@@ -1,9 +1,11 @@
 { pkgs, config, ... }:
 {
   boot = {
-    extraModulePackages = with config.boot.kernelPackages; [
-      amneziawg
-    ];
+    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+
+    #extraModulePackages = with config.boot.kernelPackages; [
+    #  amneziawg
+    #];
 
     # Bootloader.
     loader = {
@@ -17,7 +19,12 @@
       };
     };
 
-    initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" "nvidia_uvm" ];
+    initrd.kernelModules = [
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_drm"
+      "nvidia_uvm"
+    ];
 
     initrd.luks.devices."luks-9ae22b1f-5984-45a2-8375-ff4c490077e9".device =
       "/dev/disk/by-uuid/9ae22b1f-5984-45a2-8375-ff4c490077e9";
