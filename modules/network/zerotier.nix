@@ -1,6 +1,12 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  inputs,
+  ...
+}:
 let
-  networks = config.secrets.zerotier.networks;
+  #networks = config.secrets.zerotier.networks;
+  networks = inputs.secrets.zerotierNetworks;
 in
 with lib;
 {

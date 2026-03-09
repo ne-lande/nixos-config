@@ -40,6 +40,11 @@
       url = "github:zed-industries/zed";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # obv?
+    secrets = {
+      url = "path:/nix-secrets";
+    };
   };
 
   outputs =
@@ -50,17 +55,17 @@
       bpf,
       ipoc,
       zed,
+      secrets,
       ...
     }:
     let
       system = "x86_64-linux";
 
-      #mylib = import ./lib { inherit lib; };
       static = import ./static;
-      secrets = import ./secrets;
       customModules = import ./modules;
-      #mypacks = import ./packages { inherit inputs; };
-      defaultHomeManager = { inputs, ... }: {
+      defaultHomeManager =
+        { inputs, ... }:
+        {
           home-manager = {
             extraSpecialArgs = { inherit inputs; };
             useGlobalPkgs = true;
@@ -71,13 +76,10 @@
           };
         };
       defaultModules = [
-        #mypacks
         customModules
         home-manager.nixosModules.home-manager
         defaultHomeManager
         static
-        secrets
-        #mylib
       ];
     in
     {

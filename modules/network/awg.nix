@@ -8,13 +8,12 @@ with lib;
 {
   options.network.awg = {
     enable = mkEnableOption "enable awg";
-    awg = mkOption {
-      type = types.str;
-      description = "Path to the AWG configuration file";
+    awgConfig = mkOption {
+      type = types.lines;
+      description = "AWG confguration";
     };
     outIp = mkOption {
       type = types.str;
-      default = "10.0.0.2/24";
       description = "IP address for the AWG output interface";
     };
     tinyProxyConf = mkOption {
@@ -29,13 +28,14 @@ with lib;
         Allow 127.0.0.1
         PidFile "/tmp/wg-tinyproxy.pid"
       '';
-      description = "Path to the tinyproxy configuration file";
+      description = "Tinyproxy configuration";
     };
   };
 
   config = mkIf config.network.awg.enable (
     let
       tinyproxyConfFile = pkgs.writeText "tinyproxy-awg.conf" config.network.awg.tinyProxyConf;
+      awgConfFile = pkgs.writeText "awg.conf" config.network.awg.awgConfig;
       awg-run = pkgs.writeShellScriptBin "awg-run" ''
         set -euo pipefail
 
@@ -134,7 +134,7 @@ with lib;
               # $\{iproute2}/bin/ip link add wg0 type amneziawg
               ${iproute2}/bin/ip link set awg0 netns awg
               ${iproute2}/bin/ip -n awg address add ${config.network.awg.outIp} dev awg0
-              ${iproute2}/bin/ip netns exec awg ${amneziawg-tools}/bin/awg setconf awg0 ${config.network.awg.awg}
+              ${iproute2}/bin/ip netns exec awg ${amneziawg-tools}/bin/awg setconf awg0 ${awgConfFile}
               ${iproute2}/bin/ip -n awg link set awg0 up
               ${iproute2}/bin/ip -n awg route add default dev awg0
 

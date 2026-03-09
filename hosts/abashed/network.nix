@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ inputs, ... }:
+{
   networking = {
     hostName = "abashed";
     networkmanager.enable = true;
@@ -18,6 +19,6 @@
 
   services.zerotierone = {
     enable = true;
-    joinNetworks = config.secrets.zerotier.networks;
+    joinNetworks = inputs.secrets.zerotierNetworks;
   };
 }

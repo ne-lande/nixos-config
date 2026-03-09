@@ -176,6 +176,7 @@
         "ipoc": "ipoc",
         "nixpkgs": "nixpkgs",
         "plasma-manager": "plasma-manager",
+        "secrets": "secrets",
         "treefmt-nix": "treefmt-nix",
         "zed": "zed"
       }
@@ -199,6 +200,18 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
+      }
+    },
+    "secrets": {
+      "locked": {
+        "lastModified": 1773040143,
+        "narHash": "sha256-U/rUGtvzlok5dRZVysRoDPKqav58ccRSbrMQCW30Sxw=",
+        "path": "/nix-secrets",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix-secrets",
+        "type": "path"
       }
     },
     "treefmt-nix": {

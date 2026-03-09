@@ -5,7 +5,6 @@
 - modules - preconfigured configurations of apps/cli/services with off/on switch
 - packages - rewriten or niche took of use
 - static - images and etc
-- secrets - well, speaks for itself
 
 # Overview
 
