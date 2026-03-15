@@ -26,6 +26,12 @@ with lib;
     home-manager.users.${username} =
       { ... }:
       {
+        programs.direnv = {
+          enableFishIntegration = true;
+          nix-direnv.enable = true;
+          enable = true;
+        };
+
         programs.fish = {
           enable = true;
           binds = {
