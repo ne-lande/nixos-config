@@ -42,56 +42,42 @@ with lib;
         NETNS="awg"
 
         if [ $# -eq 0 ]; then
-          echo "Usage: awg-run <command> [args...]"
-          exit 1
+            echo "Usage: awg-run <command> [args...]"
+            exit 1
         fi
-
-        USER_NAME="''${SUDO_USER:?must be run via sudo}"
 
         if ! ${pkgs.iproute2}/bin/ip netns list | grep -q "^awg"; then
-          echo "awg netns not running"
-          exit 1
+            echo "awg netns not running"
+            exit 1
         fi
 
-        exec ${pkgs.iproute2}/bin/ip netns exec "$NETNS" /run/wrappers/bin/sudo -u "$USER_NAME" -E -- "$@"
+        exec sudo -E ${pkgs.iproute2}/bin/ip netns exec "$NETNS" /run/wrappers/bin/sudo -u "$USER" -E -- "$@"
       '';
     in
     {
+      boot.extraModulePackages = with config.boot.kernelPackages; [
+        amneziawg
+      ];
 
       environment.systemPackages = with pkgs; [
-        amneziawg-go
         amneziawg-tools
         awg-run
       ];
 
-      security.sudo = {
-        extraRules = [
-          {
-            commands = [
-              {
-                command = "${pkgs.systemd}/bin/systemctl start awg";
-                options = [
-                  "NOPASSWD"
-                ];
-              }
-              {
-                command = "${pkgs.systemd}/bin/systemctl stop awg";
-                options = [
-                  "NOPASSWD"
-                ];
-              }
-              {
-                command = "${awg-run}";
-                options = [
-                  "NOPASSWD"
-                  "SETENV"
-                ];
-              }
-            ];
-            users = [ "ALL" ];
-          }
-        ];
-      };
+      security.sudo.extraRules = [
+        {
+          commands = [
+            {
+              command = "${pkgs.iproute2}/bin/ip netns exec awg *";
+              options = [
+                "NOPASSWD"
+                "SETENV"
+              ];
+            }
+          ];
+          users = [ "ALL" ];
+        }
+      ];
 
       systemd.services."netns@" = {
         description = "%I network namespace";
@@ -128,10 +114,10 @@ with lib;
               ${iproute2}/bin/ip -n awg link set dev awg-tun-1 up
 
               # Create AWG tun
-              /run/wrappers/bin/sudo ${amneziawg-go}/bin/amneziawg-go awg0
+              # /run/wrappers/bin/sudo $\{amneziawg-go}/bin/amneziawg-go awg0
               # unless kernel module is supported on 6.19
               # https://github.com/amnezia-vpn/amneziawg-linux-kernel-module/issues/143
-              # $\{iproute2}/bin/ip link add wg0 type amneziawg
+              ${iproute2}/bin/ip link add wg0 type amneziawg
               ${iproute2}/bin/ip link set awg0 netns awg
               ${iproute2}/bin/ip -n awg address add ${config.network.awg.outIp} dev awg0
               ${iproute2}/bin/ip netns exec awg ${amneziawg-tools}/bin/awg setconf awg0 ${awgConfFile}

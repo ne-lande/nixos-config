@@ -23,14 +23,12 @@ let
       exit 1
     fi
 
-    USER_NAME="''${SUDO_USER:?must be run via sudo}"
-
     if ! ${pkgs.iproute2}/bin/ip netns list | grep -q "^zapret"; then
       echo "zapret netns not running"
       exit 1
     fi
 
-    exec ${pkgs.iproute2}/bin/ip netns exec "$NETNS" /run/wrappers/bin/sudo -u "$USER_NAME" -E -- "$@"
+    exec sudo -E ${pkgs.iproute2}/bin/ip netns exec "$NETNS" /run/wrappers/bin/sudo -u "$USER" -E -- "$@"
   '';
 in
 {
@@ -64,34 +62,20 @@ in
 
       boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
-      security.sudo = {
-        extraRules = [
-          {
-            commands = [
-              {
-                command = "${pkgs.systemd}/bin/systemctl start zapret";
-                options = [
-                  "NOPASSWD"
-                ];
-              }
-              {
-                command = "${pkgs.systemd}/bin/systemctl stop zapret";
-                options = [
-                  "NOPASSWD"
-                ];
-              }
-              {
-                command = "${zapret-run}";
-                options = [
-                  "NOPASSWD"
-                  "SETENV"
-                ];
-              }
-            ];
-            users = [ "ALL" ];
-          }
-        ];
-      };
+      security.sudo.extraRules = [
+        {
+          commands = [
+            {
+              command = "${pkgs.iproute2}/bin/ip netns exec zapret *";
+              options = [
+                "NOPASSWD"
+                "SETENV"
+              ];
+            }
+          ];
+          users = [ "ALL" ];
+        }
+      ];
 
       systemd.services."netns@" = {
         description = "%I network namespace";
