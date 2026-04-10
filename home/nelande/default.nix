@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
 let
   username = "nelande";
 in
@@ -52,6 +57,7 @@ in
     users.nelande = {
       isNormalUser = true;
       description = "nelande";
+      hashedPassword = inputs.secrets.users.nelande.hashedPassword;
       extraGroups = [
         "wheel"
         "networkmanager"

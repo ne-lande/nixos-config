@@ -81,14 +81,14 @@
   #};
 
   # new boot
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/b7c8-fde7";
-    fsType = "vfat";
-    options = [
-      "fmask=0022"
-      "dmask=0022"
-    ];
-  };
+  #fileSystems."/boot" = {
+  #  device = "/dev/disk/by-uuid/b7c8-fde7";
+  #  fsType = "vfat";
+  #  options = [
+  #    "fmask=0022"
+  #    "dmask=0022"
+  #  ];
+  #};
 
   fileSystems."/stor" = {
     device = "/dev/disk/by-uuid/59645dd4-8f7f-46f6-b79b-835aef96577c";
