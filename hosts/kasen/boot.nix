@@ -1,37 +1,47 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 {
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
 
-    #extraModulePackages = with config.boot.kernelPackages; [
-    #  amneziawg
-    #];
-
-    # Bootloader.
     loader = {
       efi.canTouchEfiVariables = true;
-      systemd-boot.enable = false;
-      grub = {
-        enable = true;
-        device = "nodev";
-        efiSupport = true;
-        useOSProber = true;
-      };
+      systemd-boot.enable = true;
+      #grub = {
+      #  enable = true;
+      #  device = "nodev";
+      #  efiSupport = true;
+      #  useOSProber = false;
+
+      #  gfxmodeEfi = "5120x1440";
+      #  gfxmodeBios = "5120x1440";
+      #  gfxpayloadEfi = "keep";
+      #  gfxpayloadBios = "keep";
+      #};
     };
 
-    initrd.kernelModules = [
-      "nvidia"
-      "nvidia_modeset"
-      "nvidia_drm"
-      "nvidia_uvm"
-    ];
-
-    initrd.luks.devices."luks-9ae22b1f-5984-45a2-8375-ff4c490077e9".device =
-      "/dev/disk/by-uuid/9ae22b1f-5984-45a2-8375-ff4c490077e9";
+    initrd = {
+      verbose = false;
+      systemd.enable = true;
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "usbhid"
+        "usb_storage"
+        "sd_mod"
+      ];
+      kernelModules = [
+        "kvm-amd"
+        "nvidia"
+        "nvidia_modeset"
+        "nvidia_drm"
+        "nvidia_uvm"
+      ];
+    };
 
     plymouth = {
       enable = true;
       theme = "rings";
+      font = "${pkgs.dejavu_fonts}/share/fonts/truetype/DejaVuSans.ttf";
       themePackages = with pkgs; [
         (adi1090x-plymouth-themes.override {
           selected_themes = [ "rings" ];
@@ -40,13 +50,43 @@
     };
 
     consoleLogLevel = 3;
-    initrd.verbose = false;
+
     kernelParams = [
+      "console=tty1"
       "quiet"
-      "splash"
       "boot.shell_on_fail"
       "udev.log_priority=3"
-      "rd.systemd.show_status=auto"
+      "systemd.show_status=auto"
+    ];
+  };
+
+  boot.initrd.luks.devices."luks-9ae22b1f-5984-45a2-8375-ff4c490077e9".device =
+    "/dev/disk/by-uuid/9ae22b1f-5984-45a2-8375-ff4c490077e9";
+  boot.initrd.luks.devices."luks-95aaa045-995b-44a5-8278-d7cad3559599".device =
+    "/dev/disk/by-uuid/95aaa045-995b-44a5-8278-d7cad3559599";
+
+  fileSystems."/old-root" = {
+    device = "/dev/disk/by-uuid/7a8d0dbb-e04d-4e89-9a6a-22db04ca1ea6";
+    fsType = "ext4";
+  };
+
+  # old boot
+  #fileSystems."/boot" = {
+  #  device = "/dev/disk/by-uuid/9729-4535";
+  #  fsType = "vfat";
+  #  options = [
+  #    "fmask=0022"
+  #    "dmask=0022"
+  #  ];
+  #};
+
+  # new boot
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/b7c8-fde7";
+    fsType = "vfat";
+    options = [
+      "fmask=0022"
+      "dmask=0022"
     ];
   };
 
@@ -59,4 +99,8 @@
       "exec"
     ];
   };
+
+  #swapDevices = [
+  #  { device = "/dev/disk/by-uuid/90787e9d-bd79-4c96-bad0-cdf3d445aed1"; }
+  #];
 }

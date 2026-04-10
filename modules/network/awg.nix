@@ -56,7 +56,16 @@ with lib;
     in
     {
       boot.extraModulePackages = with config.boot.kernelPackages; [
-        amneziawg
+        (amneziawg.overrideAttrs (old: rec {
+          version = "v1.0.20260329";
+
+          src = pkgs.fetchFromGitHub {
+            owner = "amnezia-vpn";
+            repo = "amneziawg-linux-kernel-module";
+            rev = version;
+            hash = "sha256-csKb8xFnsOYnIbnoqbpIY/R7X8OqF9O9pKC/JZH42pA=";
+          };
+        }))
       ];
 
       environment.systemPackages = with pkgs; [
@@ -117,7 +126,7 @@ with lib;
               # /run/wrappers/bin/sudo $\{amneziawg-go}/bin/amneziawg-go awg0
               # unless kernel module is supported on 6.19
               # https://github.com/amnezia-vpn/amneziawg-linux-kernel-module/issues/143
-              ${iproute2}/bin/ip link add wg0 type amneziawg
+              ${iproute2}/bin/ip link add awg0 type amneziawg
               ${iproute2}/bin/ip link set awg0 netns awg
               ${iproute2}/bin/ip -n awg address add ${config.network.awg.outIp} dev awg0
               ${iproute2}/bin/ip netns exec awg ${amneziawg-tools}/bin/awg setconf awg0 ${awgConfFile}
@@ -135,7 +144,7 @@ with lib;
 
               # Remove awg links
               ${iproute2}/bin/ip -n awg route del default dev awg0
-              /run/wrappers/bin/sudo ${iproute2}/bin/ip -n awg link del awg0
+              ${iproute2}/bin/ip -n awg link del awg0
 
               # Kill tinyproxy
               ${procps}/bin/pkill -F /tmp/wg-tinyproxy.pid

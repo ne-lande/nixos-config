@@ -54,10 +54,12 @@ with lib;
           };
 
           quickAccessTerminalConfig = {
+            edge = "bottom";
             grab_keyboard = "no";
             start_as_hidden = false;
             hide_on_focus_loss = false;
             background_opacity = 0.85;
+            margin_left = 16;
           };
         };
       };

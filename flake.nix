@@ -5,6 +5,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # not free, dont try
     bpf = {
       url = "git+ssh://git@binarybears-notes.ru:2424/tools/bpf.git";
@@ -36,11 +41,6 @@
       };
     };
 
-    zed = {
-      url = "github:zed-industries/zed";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # obv?
     secrets = {
       url = "path:/nix-secrets";
@@ -52,9 +52,9 @@
       nixpkgs,
       home-manager,
       plasma-manager,
+      disko,
       bpf,
       ipoc,
-      zed,
       secrets,
       ...
     }:
@@ -89,6 +89,11 @@
           specialArgs = { inherit inputs; };
 
           modules = defaultModules ++ [
+            disko.nixosModules.disko
+            ./hosts/kasen/disko.nix
+            {
+              disko.devices.main.device = nixpkgs.lib.mkForce "/dev/vda";
+            }
             ./hosts/kasen
             ./home/nelande
           ];

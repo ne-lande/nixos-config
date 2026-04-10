@@ -10,15 +10,11 @@
 
   central = {
     hostname = "kasen";
-    plasma-wallpaper = config.static.gtfo;
+    #plasma-wallpaper = config.static.gtfo;
   };
 
-  DE.plasma.enable = true;
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
-  };
+  #DE.plasma.enable = true;
+  DE.niri.enable = true;
 
   # i wont step on these ever again
   nix = {

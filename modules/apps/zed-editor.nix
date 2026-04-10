@@ -6,7 +6,6 @@
 }:
 let
   username = config.central.username;
-  system = "x86_64-linux";
 in
 with lib;
 {
@@ -17,10 +16,10 @@ with lib;
 
   config = mkIf config.apps.zed-editor.enable {
     home-manager.users.${username} =
-      { inputs, ... }:
+      { ... }:
       {
         programs.zed-editor = {
-          package = inputs.zed.packages.${system}.default;
+          package = pkgs.zed-editor;
           extraPackages = with pkgs; [
             nixd
             nixfmt
@@ -62,7 +61,8 @@ with lib;
           ];
 
           userSettings = {
-            assistant.enabled = false;
+            disable_ai = true;
+            assistant.enabled = true;
 
             node = {
               path = lib.getExe pkgs.nodejs;

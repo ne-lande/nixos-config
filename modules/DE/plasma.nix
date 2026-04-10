@@ -15,21 +15,20 @@ with lib;
   };
 
   config = mkIf config.DE.plasma.enable {
-    # Configure keymap in X11
-    services.xserver = {
+    services.desktopManager.plasma6 = {
       enable = true;
-      xkb = {
-        layout = "us,ru";
-        variant = "";
-      };
+      enableQt5Integration = false;
     };
 
-    # Enable and configure autologin
-    services.desktopManager.plasma6.enable = true;
     services.displayManager = {
-      sddm.settings.General.DisplayServer = "x11-user"; # wayland
-      # sddm.wayland.enable = true;
-      defaultSession = "plasmax11"; # plasma
+      sddm = {
+        enable = true;
+        wayland = {
+          enable = true;
+          compositor = "kwin";
+        };
+      };
+      defaultSession = "plasma";
       autoLogin.enable = true;
       autoLogin.user = username;
     };
@@ -325,6 +324,20 @@ with lib;
               # Forces kde to not change this value (even through the settings app).
               immutable = true;
             };
+          };
+
+          input.keyboard = {
+            switchingPolicy = "global";
+            layouts = [
+              {
+                displayName = "us";
+                layout = "us";
+              }
+              {
+                displayName = "ru";
+                layout = "ru";
+              }
+            ];
           };
         };
       };

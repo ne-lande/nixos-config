@@ -5,9 +5,7 @@
 }:
 let
   username = config.central.username;
-  nixpath = "/run/current-system/sw/bin";
-  homepath = "/etc/profiles/per-user/${username}/bin";
-  vesktop = "${nixpath}/ip netns exec awg sudo -u ${username} -E ${homepath}/vesktop";
+  vesktop = "/etc/profiles/per-user/${username}/bin/vesktop";
 in
 with lib;
 {
@@ -16,30 +14,47 @@ with lib;
   };
 
   config = mkIf config.apps.vesktop.enable {
-    security.sudo.extraConfig = ''
-      ALL ALL=(ALL) NOPASSWD:SETENV: ${vesktop}
-    '';
-
     home-manager.users.${username} =
       { ... }:
       {
-        xdg.desktopEntries.vesktop-netns = {
-          categories = [
-            "Network"
-            "InstantMessaging"
-            "Chat"
-          ];
-          exec = "sudo -E ${vesktop}";
-          genericName = "Internet Messenger";
-          icon = "vesktop";
-          name = "Vesktop [NETNS]";
-          noDisplay = false;
-          startupNotify = true;
-          terminal = false;
-          type = "Application";
-          mimeType = [ "x-scheme-handler/discord" ];
-          settings = {
+        xdg.desktopEntries = {
+          vesktop-zapret-netns = {
+            categories = [
+              "Network"
+              "InstantMessaging"
+              "Chat"
+            ];
+            exec = "zapret-run ${vesktop}";
+            genericName = "Internet Messenger";
+            icon = "vesktop";
+            name = "Vesktop [ZAPRET]";
+            noDisplay = false;
+            startupNotify = true;
+            terminal = false;
+            type = "Application";
+            mimeType = [ "x-scheme-handler/discord" ];
+            settings = {
 
+            };
+          };
+          vesktop-awg-netns = {
+            categories = [
+              "Network"
+              "InstantMessaging"
+              "Chat"
+            ];
+            exec = "awg-run ${vesktop}";
+            genericName = "Internet Messenger";
+            icon = "vesktop";
+            name = "Vesktop [AWG]";
+            noDisplay = false;
+            startupNotify = true;
+            terminal = false;
+            type = "Application";
+            mimeType = [ "x-scheme-handler/discord" ];
+            settings = {
+
+            };
           };
         };
 
