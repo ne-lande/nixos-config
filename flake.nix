@@ -91,9 +91,6 @@
           modules = defaultModules ++ [
             disko.nixosModules.disko
             ./hosts/kasen/disko.nix
-            {
-              disko.devices.main.device = nixpkgs.lib.mkForce "/dev/vda";
-            }
             ./hosts/kasen
             ./home/nelande
           ];
