@@ -1,6 +1,8 @@
-{
+let
+  c = import ./colors.nix;
+in {
   enable = true;
-  systemd.enable = true;
+  systemd.enable = false;
   settings = {
     bar = {
       layer = "top";
@@ -23,7 +25,7 @@
         tooltip = true;
       };
       "custom/gpu" = {
-        exec = "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits";
+        exec = "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo N/A";
         interval = 5;
 
         format = "GPU\n{text}%";
@@ -114,6 +116,12 @@
         "niri/workspaces"
       ];
       modules-right = [
+        "tray"
+        "bluetooth"
+        "network#eno1"
+        "network#wlo1"
+        "pulseaudio#audio"
+        "pulseaudio#microphone"
         "clock"
         "niri/language"
       ];
@@ -136,7 +144,7 @@
           mode = "year";
           mode-mon-col = 3;
           format = {
-            today = "<span color='#0dbc79'>{}</span>";
+            today = "<span color='${c.accent}'>{}</span>";
           };
         };
       };
@@ -145,6 +153,7 @@
   style = ''
     * {
       background-color: transparent;
+      color: ${c.fg};
       font-family: "FiraCode Nerd Font", monospace;
       font-size: 18px;
       font-weight: bold;
@@ -156,18 +165,18 @@
     }
 
     window#waybar {
-      background-color: alpha(#11170a, 0.7);
+      background-color: alpha(${c.bgDark}, 0.7);
       padding: 0;
       margin: 0;
-      border: 4px solid alpha(#505050, 0.7);
+      border: 4px solid alpha(${c.accent}, 0.7);
     }
 
     tooltip {
-      background-color: alpha(#11170a, 0.7);
-      border: 4px solid alpha(#505050, 0.7);
+      background-color: alpha(${c.bgDark}, 0.7);
+      border: 4px solid alpha(${c.accent}, 0.7);
     }
     tooltip_label {
-      color: white;
+      color: ${c.fg};
     }
 
     #cpu,

@@ -14,23 +14,16 @@
   };
 
   #DE.plasma.enable = true;
-  DE.niri.enable = true;
-
-  # i wont step on these ever again
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-    };
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      auto-optimise-store = true;
-    };
+  DE.niri = {
+    enable = true;
+    configFile = ./niri-config.kdl;
   };
+  DE.awww = {
+    enable = true;
+    backgroundDir = "/stor/Backgrounds";
+  };
+
+  nix-configuration.enable = true;
 
   # Regional
   i18n = {

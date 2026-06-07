@@ -33,13 +33,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    plasma-manager = {
-      url = "github:pjones/plasma-manager";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
-    };
+    #plasma-manager = {
+    #  url = "github:pjones/plasma-manager";
+    #  inputs = {
+    #    nixpkgs.follows = "nixpkgs";
+    #    home-manager.follows = "home-manager";
+    #  };
+    #};
 
     # obv?
     secrets = {
@@ -51,7 +51,7 @@
     inputs@{
       nixpkgs,
       home-manager,
-      plasma-manager,
+      #plasma-manager,
       disko,
       bpf,
       ipoc,
@@ -61,6 +61,7 @@
     let
       system = "x86_64-linux";
 
+      mylib = import ./lib;
       static = import ./static;
       customModules = import ./modules;
       defaultHomeManager =
@@ -70,9 +71,9 @@
             extraSpecialArgs = { inherit inputs; };
             useGlobalPkgs = true;
             useUserPackages = true;
-            sharedModules = [
-              plasma-manager.homeModules.plasma-manager
-            ];
+            #sharedModules = [
+            #  plasma-manager.homeModules.plasma-manager
+            #];
           };
         };
       defaultModules = [
@@ -86,7 +87,7 @@
       nixosConfigurations = {
         "kasen" = nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs mylib; };
 
           modules = defaultModules ++ [
             disko.nixosModules.disko
@@ -98,6 +99,7 @@
 
         "yuka" = nixpkgs.lib.nixosSystem {
           inherit system;
+          specialArgs = { inherit inputs mylib; };
 
           modules = defaultModules ++ [
             ./hosts/yuka
@@ -107,6 +109,7 @@
 
         "abashed" = nixpkgs.lib.nixosSystem {
           inherit system;
+          specialArgs = { inherit inputs mylib; };
           modules = defaultModules ++ [
             ./hosts/abashed
             ./home/honeset

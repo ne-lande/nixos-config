@@ -22,11 +22,14 @@ in
       };
     };
 
-  programs.nh.enable = true;
   docker.enable = true;
   kube.enable = true;
   lists.enable = true;
-  git.enable = true;
+  git = {
+    enable = true;
+    userName = inputs.secrets.git.userName;
+    userEmail = inputs.secrets.git.userEmail;
+  };
   neovim.enable = true;
   music = {
     enable = true;
@@ -40,15 +43,18 @@ in
   };
 
   apps = {
-    kitty = {
-      enable = true;
-      background_image = config.static.kitties;
-    };
+    kitty.enable = true;
     librewolf.enable = true;
+    lwchrome.enable = true;
     steam.enable = true;
     zed-editor.enable = true;
     vesktop.enable = true;
     obsidian.enable = true;
+    obs-studio.enable = true;
+  };
+
+  xdg.mime.defaultApplications = {
+    "x-scheme-handler/zoommtg" = "Zoom.desktop";
   };
 
   users = {

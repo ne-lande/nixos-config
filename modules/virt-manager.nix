@@ -2,7 +2,7 @@
 with lib;
 {
   options.virt-manager = {
-    enable = mkEnableOption "enable neovim";
+    enable = mkEnableOption "enable virt-manager";
   };
 
   config = mkIf config.virt-manager.enable {

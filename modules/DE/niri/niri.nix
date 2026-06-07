@@ -11,6 +11,10 @@ with lib;
 {
   options.DE.niri = {
     enable = mkEnableOption "enable niri wayland compositor";
+    configFile = mkOption {
+      type = types.path;
+      description = "Path to niri config.kdl";
+    };
   };
 
   config = mkIf config.DE.niri.enable {
@@ -38,7 +42,7 @@ with lib;
       settings = {
         default_session = {
           command = "${config.programs.niri.package}/bin/niri-session";
-          user = "nelande";
+          user = username;
         };
       };
     };
@@ -48,9 +52,16 @@ with lib;
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";
       QT_QPA_PLATFORM = "wayland";
-      SDL_VIDEODRIVER = "wayland";
+      # SDL_VIDEODRIVER = "wayland" intentionally removed — forcing Wayland on SDL
+      # breaks Proton/Wine games which expect XWayland, causing image freeze
       _JAVA_AWT_WM_NONREPARENTING = "1";
       XDG_SESSION_TYPE = "wayland";
+      # NVIDIA Wayland backend — required for correct GBM/EGL path on NVIDIA
+      GBM_BACKEND = "nvidia-drm";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      LIBVA_DRIVER_NAME = "nvidia";
+      # Let newer Proton opt-in to native Wayland when it can handle it
+      PROTON_ENABLE_WAYLAND = "1";
     };
 
     # Security/XDG portal setup for Wayland
@@ -66,6 +77,7 @@ with lib;
 
     # Hardware acceleration for Wayland
     # Audio and screen sharing
+    services.pulseaudio.enable = false;
     security.rtkit.enable = mkDefault true;
     services.pipewire = {
       enable = mkDefault true;
@@ -90,9 +102,9 @@ with lib;
         programs.swaylock = import ./swaylock.nix;
 
         services.mako = import ./mako.nix;
-        services.awww = import ./awww.nix;
+        #services.awww = import ./awww.nix;
 
-        xdg.configFile."niri/config.kdl".source = ./niri-config.kdl;
+        xdg.configFile."niri/config.kdl".source = config.DE.niri.configFile;
         services = {
           polkit-gnome.enable = true; # polkit
           swayidle = {

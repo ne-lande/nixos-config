@@ -1,9 +1,3 @@
-{ ... }:
-{
-  #imports = mylib.scanPaths ./.;
-  imports = [
-    ./gnome.nix
-    ./plasma.nix
-    ./niri
-  ];
+{ mylib, ... }: {
+  imports = mylib.scanPaths ./.;
 }

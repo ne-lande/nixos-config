@@ -11,7 +11,6 @@ with lib;
 {
   options.apps.zed-editor = {
     enable = mkEnableOption "enable zed editor";
-    background_image = mkOption { type = types.str; };
   };
 
   config = mkIf config.apps.zed-editor.enable {
@@ -61,8 +60,10 @@ with lib;
           ];
 
           userSettings = {
-            disable_ai = true;
-            assistant.enabled = true;
+            assistant = {
+              enabled = false;
+              version = "2";
+            };
 
             node = {
               path = lib.getExe pkgs.nodejs;

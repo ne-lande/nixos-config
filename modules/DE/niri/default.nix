@@ -1,4 +1,7 @@
 { ... }:
 {
-  imports = [ ./niri.nix ];
+  imports = [
+    ./niri.nix
+    ./awww.nix
+  ];
 }

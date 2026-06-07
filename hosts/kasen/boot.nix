@@ -57,18 +57,19 @@
       "boot.shell_on_fail"
       "udev.log_priority=3"
       "systemd.show_status=auto"
+      "nvidia-drm.fbdev=1"
     ];
   };
 
-  boot.initrd.luks.devices."luks-9ae22b1f-5984-45a2-8375-ff4c490077e9".device =
-    "/dev/disk/by-uuid/9ae22b1f-5984-45a2-8375-ff4c490077e9";
-  boot.initrd.luks.devices."luks-95aaa045-995b-44a5-8278-d7cad3559599".device =
-    "/dev/disk/by-uuid/95aaa045-995b-44a5-8278-d7cad3559599";
+  #boot.initrd.luks.devices."luks-bc46ce17-eb27-4ad3-a7fe-b7dfd665e60c".device =
+  #  "/dev/disk/by-uuid/bc46ce17-eb27-4ad3-a7fe-b7dfd665e60c";
+  #boot.initrd.luks.devices."luks-95aaa045-995b-44a5-8278-d7cad3559599".device =
+  #  "/dev/disk/by-uuid/95aaa045-995b-44a5-8278-d7cad3559599";
 
-  fileSystems."/old-root" = {
-    device = "/dev/disk/by-uuid/7a8d0dbb-e04d-4e89-9a6a-22db04ca1ea6";
-    fsType = "ext4";
-  };
+  #fileSystems."/old-root" = {
+  #  device = "/dev/disk/by-uuid/7a8d0dbb-e04d-4e89-9a6a-22db04ca1ea6";
+  #  fsType = "ext4";
+  #};
 
   # old boot
   #fileSystems."/boot" = {

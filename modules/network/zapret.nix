@@ -73,20 +73,9 @@ in
               ];
             }
           ];
-          users = [ "ALL" ];
+          users = [ config.central.username ];
         }
       ];
-
-      systemd.services."netns@" = {
-        description = "%I network namespace";
-        before = [ "network.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStart = "${pkgs.iproute2}/bin/ip netns add %I";
-          ExecStop = "${pkgs.iproute2}/bin/ip netns del %I";
-        };
-      };
 
       systemd.services.zapret = {
         description = "zapret netns";
@@ -174,15 +163,16 @@ in
           ExecStop =
             with pkgs;
             writers.writeBash "zapret-down" ''
+              # Remove host-netns NAT rule
               ${iptables}/bin/iptables -t nat -D POSTROUTING -s 172.31.255.0/30 -j MASQUERADE
-              ${iproute2}/bin/ip netns exec zapret ${iptables}/bin/iptables -t mangle -D OUTPUT -p tcp -j NFQUEUE --queue-num 200
-              ${iproute2}/bin/ip netns exec zapret ${iptables}/bin/iptables -t mangle -D OUTPUT -p udp -j NFQUEUE --queue-num 200
 
-              ${iproute2}/bin/ip -n zapret route del default dev zapret-veth1
+              # Remove the veth pair (both ends go away automatically)
               ${iproute2}/bin/ip link del zapret-veth0
 
-              ${procps}/bin/pkill -F /tmp/zapret-tinyproxy.pid
-              ${procps}/bin/pkill -F /tmp/zapret.pid
+              # Kill daemons; mangle rules in the zapret netns are cleaned up
+              # automatically when the netns@ service destroys the namespace
+              ${procps}/bin/pkill -F /tmp/zapret-tinyproxy.pid || true
+              ${procps}/bin/pkill -F /tmp/zapret.pid || true
             '';
         };
       };

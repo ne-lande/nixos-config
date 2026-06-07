@@ -18,7 +18,7 @@
   };
 
   network = {
-    zerotier.enable = true;
+    #zerotier.enable = true;
     awg = {
       awgConfig = inputs.secrets.awg.config;
       outIp = inputs.secrets.awg.outIp;

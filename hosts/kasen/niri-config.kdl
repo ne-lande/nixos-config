@@ -3,9 +3,12 @@
 
 prefer-no-csd
 
+spawn-at-startup "waybar"
+
 output "DP-1" {
      mode "5120x1440@144.000"
      scale 1.0
+     variable-refresh-rate
 }
 
 input {
@@ -114,4 +117,14 @@ cursor {
 
 clipboard {
     disable-primary
+}
+
+// Steam friend/activity notification popups have an empty title unlike the
+// main Steam window. open-focused false stops them stealing keyboard focus.
+// If the popup still appears centered, run `niri msg windows` while one is
+// visible to get the exact app-id/title and adjust the match below.
+window-rule {
+    match app-id=r#"^steam$"# title=r#"^$"#
+    open-focused false
+    default-floating-position relative-to="bottom-right" x=-16 y=-16
 }

@@ -84,20 +84,9 @@ with lib;
               ];
             }
           ];
-          users = [ "ALL" ];
+          users = [ config.central.username ];
         }
       ];
-
-      systemd.services."netns@" = {
-        description = "%I network namespace";
-        before = [ "network.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStart = "${pkgs.iproute2}/bin/ip netns add %I";
-          ExecStop = "${pkgs.iproute2}/bin/ip netns del %I";
-        };
-      };
 
       systemd.services.awg = {
         description = "awg netns";
@@ -121,6 +110,7 @@ with lib;
               ${iproute2}/bin/ip link set dev awg-tun-0 up
               ${iproute2}/bin/ip -n awg addr add 10.0.0.2/24 dev awg-tun-1
               ${iproute2}/bin/ip -n awg link set dev awg-tun-1 up
+              ${iproute2}/bin/ip -n awg link set lo up
 
               # Create AWG tun
               # /run/wrappers/bin/sudo $\{amneziawg-go}/bin/amneziawg-go awg0

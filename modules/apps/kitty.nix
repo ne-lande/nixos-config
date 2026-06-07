@@ -6,7 +6,6 @@ with lib;
 {
   options.apps.kitty = {
     enable = mkEnableOption "enable kitty";
-    background_image = mkOption { type = types.str; };
   };
 
   config = mkIf config.apps.kitty.enable {

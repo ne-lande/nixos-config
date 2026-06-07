@@ -19,22 +19,20 @@ let
     apps-base = [
       telegram-desktop
       libreoffice-still
-      #teamspeak6-client
       prismlauncher
       kdePackages.francis
       gimp
+      claude-code
+      insomnia
     ];
 
     apps-work = [
       wireshark
       cyberchef
-      # wait until katok pack it
-      # caido
       imhex
-      # no more ghidra
-      # ghidra
       inputs.bpf.packages.${system}.burpsuitepro
       inputs.ipoc.packages.${system}.idapro
+      zoom-us
     ];
 
     cli-work = [
@@ -69,6 +67,10 @@ let
       unzip
       unrar
       jq
+      glow
+      htop
+      dos2unix
+      psmisc
     ];
 
     cli-base = [
@@ -77,9 +79,14 @@ let
       git
       just
       gnumake
+      gcc
       file
       tldr
       cloc
+      bat
+      eza
+      fd
+      ripgrep
     ];
   };
 in
@@ -93,7 +100,6 @@ in
     mkIf config.lists.enable {
       nixpkgs.config = {
         allowUnfree = true;
-        allowBroken = true;
         allowInsecure = false;
         allowUnsupportedSystem = true;
       };

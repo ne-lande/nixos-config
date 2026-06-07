@@ -19,6 +19,8 @@ with lib;
       {
         programs.neovim = {
           enable = true;
+          withRuby = false;
+          withPython3 = false;
           plugins = with pkgs.vimPlugins; [
             vim-airline
             vim-airline-themes

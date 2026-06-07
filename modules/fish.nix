@@ -15,13 +15,6 @@ with lib;
   };
 
   config = mkIf config.shell.fish.enable {
-    environment.systemPackages = with pkgs; [
-      eza
-      fd
-      ripgrep
-      bat
-    ];
-
     programs.fish.enable = true;
     home-manager.users.${username} =
       { ... }:

@@ -1,36 +1,27 @@
 { ... }: {
   imports = [
     ./hardware.nix
-    ./packages.nix
     ./boot.nix
     ./network.nix
-    ./sound.nix
     ./nvidia.nix
   ];
 
   central = {
-    hostname = "kasen";
+    hostname = "yuka";
   };
 
   hardware.enableAllFirmware = true;
 
-  DE.gnome.enable = true;
-
-  virtualisation.docker.enable = true;
-  users.extraGroups.docker.members = [ "nelande" ];
-
-  # Nix Settings
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-    };
-    settings = {
-        experimental-features = [ "nix-command" "flakes" ];
-        auto-optimise-store = true;
-    };
+  DE.niri = {
+    enable = true;
+    configFile = ./niri-config.kdl;
   };
+  DE.awww = {
+    enable = true;
+    backgroundDir = "/home/nelande/Backgrounds";
+  };
+
+  nix-configuration.enable = true;
 
   # Regional
   i18n = {
@@ -44,10 +35,14 @@
 
   time.timeZone = "Europe/Moscow";
 
-  powerManagement.cpuFreqGovernor = "performance";
+  powerManagement.cpuFreqGovernor = "schedutil";
 
-  services.blueman.enable = true;
-  hardware.bluetooth.enable = true;
+  zramSwap.enable = true;
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
   services.printing.enable = false;
   security.rtkit.enable = true;
 

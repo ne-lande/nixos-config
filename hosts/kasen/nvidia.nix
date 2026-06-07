@@ -9,7 +9,7 @@
     powerManagement.finegrained = false;
     powerManagement.enable = false;
     open = true;
-    nvidiaSettings = true;
+    #nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
 }

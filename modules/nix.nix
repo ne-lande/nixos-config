@@ -7,6 +7,7 @@ with lib;
 
   config = mkIf config.nix-configuration.enable {
     nix = {
+      channel.enable = false;
       settings = {
         experimental-features = [
           "nix-command"
@@ -20,7 +21,7 @@ with lib;
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 4d --keep 3";
-      flake = "/nix-config"; # sets NH_OS_FLAKE variable for you
+      flake = "/nix-config";
     };
   };
 }
