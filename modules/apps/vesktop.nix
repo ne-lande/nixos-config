@@ -37,6 +37,23 @@ with lib;
 
             };
           };
+          vesktop-zapret2-netns = {
+            categories = [
+              "Network"
+              "InstantMessaging"
+              "Chat"
+            ];
+            exec = "zapret2-run ${vesktop}";
+            genericName = "Internet Messenger";
+            icon = "vesktop";
+            name = "Vesktop [ZAPRET2]";
+            noDisplay = false;
+            startupNotify = true;
+            terminal = false;
+            type = "Application";
+            mimeType = [ "x-scheme-handler/discord" ];
+            settings = { };
+          };
           vesktop-awg-netns = {
             categories = [
               "Network"

@@ -24,6 +24,7 @@
       outIp = inputs.secrets.awg.outIp;
       enable = true;
     };
-    zapret.enable = true;
+    zapret2.enable = true;
+    #zapret.enable = true;
   };
 }
