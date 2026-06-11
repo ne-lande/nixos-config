@@ -51,13 +51,10 @@ in
     vesktop.enable = true;
     obsidian.enable = true;
     obs-studio.enable = true;
+    zoom.enable = true;
   };
 
-  xdg.mime.defaultApplications = {
-    "x-scheme-handler/zoommtg" = "Zoom.desktop";
-  };
-
-  users = {
+users = {
     defaultUserShell = pkgs.fish;
 
     users.nelande = {

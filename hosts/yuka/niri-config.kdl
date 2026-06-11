@@ -128,3 +128,20 @@ window-rule {
     open-focused false
     default-floating-position relative-to="bottom-right" x=-16 y=-16
 }
+
+// Zoom creates many small unnamed popup windows (presentation toolbar, reactions, etc.)
+// that grab focus on hover and cause the flashing/reappearing effect.
+// open-focused false stops them stealing keyboard focus.
+// open-floating true keeps them from being tiled, which breaks their positioning.
+window-rule {
+    match app-id=r#"zoom"# title=r#"^$"#
+    open-focused false
+    open-floating true
+}
+
+// All other Zoom windows (main, meeting, screen share) work better floating —
+// Zoom manages its own internal layout and fights tiling compositors.
+window-rule {
+    match app-id=r#"zoom"#
+    open-floating true
+}

@@ -36,12 +36,18 @@ in
         "--payload=http_req"
         "--lua-desync=http_methodeol"
         "--new"
-        # HTTPS/WSS TLS: tcpseg+drop works universally for TLS 1.3
-        # 8443 is Discord voice WebSocket signaling
+        # HTTPS/WSS TLS: fake TLS + TCP timestamp -1000 is blockcheck's
+        # first-ranked strategy for discord, abs.twimg, x.com (TLS 1.2+1.3).
+        # 8443 is Discord voice WebSocket signaling.
         "--filter-tcp=443,8443"
         "--payload=tls_client_hello"
-        "--lua-desync=tcpseg:pos=0,-1:seqovl=1"
-        "--lua-desync=drop"
+        "--lua-desync=fake:blob=fake_default_tls:tcp_ts=-1000"
+        "--new"
+        # QUIC: youtube TLS has no working TCP strategy at all — QUIC
+        # fake_default_quic:repeats=11 is the only confirmed path for youtube.
+        "--filter-udp=443"
+        "--payload=quic_initial"
+        "--lua-desync=fake:blob=fake_default_quic:repeats=11"
       ];
       description = "Extra arguments passed to nfqws2. See `nfqws2 --help`.";
     };
@@ -136,9 +142,12 @@ in
                 -m mark ! --mark 0x40000000/0x40000000 \
                 -j NFQUEUE --queue-num 201 --queue-bypass
 
-              # Drop QUIC (UDP 443) to force TCP fallback in Electron/Chromium apps
+              # QUIC bypass via nfqws2 (same queue as TCP)
               ${iproute2}/bin/ip netns exec zapret2 ${iptables}/bin/iptables \
-                -A OUTPUT -o zapret2-veth1 -p udp --dport 443 -j DROP
+                -t mangle -A OUTPUT -o zapret2-veth1 \
+                -p udp --dport 443 \
+                -m mark ! --mark 0x40000000/0x40000000 \
+                -j NFQUEUE --queue-num 201 --queue-bypass
 
               ${iproute2}/bin/ip netns exec zapret2 ${zapret2}/bin/nfqws2 \
                 ${nfqws2Args} \
@@ -152,7 +161,10 @@ in
             writers.writeBash "zapret2-down" ''
               ${iptables}/bin/iptables -t nat -D POSTROUTING -s 172.31.255.4/30 -j MASQUERADE
               ${iproute2}/bin/ip netns exec zapret2 ${iptables}/bin/iptables \
-                -D OUTPUT -o zapret2-veth1 -p udp --dport 443 -j DROP || true
+                -t mangle -D OUTPUT -o zapret2-veth1 \
+                -p udp --dport 443 \
+                -m mark ! --mark 0x40000000/0x40000000 \
+                -j NFQUEUE --queue-num 201 --queue-bypass || true
 
               ${iproute2}/bin/ip link del zapret2-veth0
 

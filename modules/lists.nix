@@ -32,7 +32,6 @@ let
       imhex
       inputs.bpf.packages.${system}.burpsuitepro
       inputs.ipoc.packages.${system}.idapro
-      zoom-us
     ];
 
     cli-work = [
