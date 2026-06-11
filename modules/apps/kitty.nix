@@ -55,7 +55,7 @@ with lib;
           quickAccessTerminalConfig = {
             edge = "bottom";
             grab_keyboard = "no";
-            start_as_hidden = false;
+            start_as_hidden = true;
             hide_on_focus_loss = false;
             background_opacity = 0.85;
             margin_left = 16;

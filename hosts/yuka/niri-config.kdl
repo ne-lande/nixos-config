@@ -4,6 +4,7 @@
 prefer-no-csd
 
 spawn-at-startup "waybar"
+spawn-at-startup "kitten" "quick-access-terminal"
 
 // Run `niri msg outputs` on first boot to get the exact output name and mode.
 // output "eDP-1" {
