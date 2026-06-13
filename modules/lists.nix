@@ -20,7 +20,6 @@ let
       telegram-desktop
       libreoffice-still
       prismlauncher
-      kdePackages.francis
       gimp
       claude-code
       insomnia
@@ -70,6 +69,7 @@ let
       htop
       dos2unix
       psmisc
+      lsof
     ];
 
     cli-base = [

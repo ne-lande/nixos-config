@@ -2,10 +2,20 @@
   config,
   lib,
   pkgs,
+  mylib,
   ...
 }:
 with lib;
 let
+  tp = mylib.mkTinyproxyConf {
+    name = "zapret";
+    port = 8888;
+    listenIp = "172.31.255.2";
+    allowIps = [
+      "127.0.0.1"
+      "172.31.255.1"
+    ];
+  };
   zdy = pkgs.fetchFromGitHub {
     "owner" = "Flowseal";
     "repo" = "zapret-discord-youtube";
@@ -36,17 +46,8 @@ in
     enable = mkEnableOption "enable zapret";
     tinyProxyConf = mkOption {
       type = types.lines;
-      default = ''
-        User nobody
-        Group nogroup
-        Port 8888
-        Listen 172.31.255.2
-        Timeout 600
-        Allow 127.0.0.1
-        Allow 172.31.255.1
-        PidFile "/tmp/zapret-tinyproxy.pid"
-      '';
-      description = "Path to the tinyproxy configuration file";
+      default = tp.conf;
+      description = "tinyproxy configuration for the zapret namespace";
     };
   };
 
@@ -171,7 +172,7 @@ in
 
               # Kill daemons; mangle rules in the zapret netns are cleaned up
               # automatically when the netns@ service destroys the namespace
-              ${procps}/bin/pkill -F /tmp/zapret-tinyproxy.pid || true
+              ${procps}/bin/pkill -F ${tp.pidFile} || true
               ${procps}/bin/pkill -F /tmp/zapret.pid || true
             '';
         };

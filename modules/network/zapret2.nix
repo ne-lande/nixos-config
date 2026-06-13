@@ -2,10 +2,20 @@
   config,
   lib,
   pkgs,
+  mylib,
   ...
 }:
 with lib;
 let
+  tp = mylib.mkTinyproxyConf {
+    name = "zapret2";
+    port = 8889;
+    listenIp = "172.31.255.6";
+    allowIps = [
+      "127.0.0.1"
+      "172.31.255.5"
+    ];
+  };
   zapret2-run = pkgs.writeShellScriptBin "zapret2-run" ''
     set -euo pipefail
 
@@ -54,16 +64,7 @@ in
 
     tinyProxyConf = mkOption {
       type = types.lines;
-      default = ''
-        User nobody
-        Group nogroup
-        Port 8889
-        Listen 172.31.255.6
-        Timeout 600
-        Allow 127.0.0.1
-        Allow 172.31.255.5
-        PidFile "/tmp/zapret2-tinyproxy.pid"
-      '';
+      default = tp.conf;
       description = "tinyproxy configuration for the zapret2 namespace";
     };
   };
@@ -168,7 +169,7 @@ in
 
               ${iproute2}/bin/ip link del zapret2-veth0
 
-              ${procps}/bin/pkill -F /tmp/zapret2-tinyproxy.pid || true
+              ${procps}/bin/pkill -F ${tp.pidFile} || true
               ${procps}/bin/pkill -F /tmp/zapret2.pid || true
             '';
         };

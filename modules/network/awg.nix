@@ -2,9 +2,21 @@
   config,
   lib,
   pkgs,
+  mylib,
   ...
 }:
 with lib;
+let
+  tp = mylib.mkTinyproxyConf {
+    name = "awg";
+    port = 8888;
+    listenIp = "10.0.0.2";
+    allowIps = [
+      "10.0.0.1"
+      "127.0.0.1"
+    ];
+  };
+in
 {
   options.network.awg = {
     enable = mkEnableOption "enable awg";
@@ -18,17 +30,8 @@ with lib;
     };
     tinyProxyConf = mkOption {
       type = types.lines;
-      default = ''
-        User nobody
-        Group nogroup
-        Port 8888
-        Listen 10.0.0.2
-        Timeout 600
-        Allow 10.0.0.1
-        Allow 127.0.0.1
-        PidFile "/tmp/wg-tinyproxy.pid"
-      '';
-      description = "Tinyproxy configuration";
+      default = tp.conf;
+      description = "tinyproxy configuration for the awg namespace";
     };
   };
 
@@ -137,7 +140,7 @@ with lib;
               ${iproute2}/bin/ip -n awg link del awg0
 
               # Kill tinyproxy
-              ${procps}/bin/pkill -F /tmp/wg-tinyproxy.pid
+              ${procps}/bin/pkill -F ${tp.pidFile}
             '';
         };
       };

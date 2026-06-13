@@ -33,14 +33,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    #plasma-manager = {
-    #  url = "github:pjones/plasma-manager";
-    #  inputs = {
-    #    nixpkgs.follows = "nixpkgs";
-    #    home-manager.follows = "home-manager";
-    #  };
-    #};
-
     # obv?
     secrets = {
       url = "path:/nix-secrets";
@@ -51,7 +43,6 @@
     inputs@{
       nixpkgs,
       home-manager,
-      #plasma-manager,
       disko,
       bpf,
       ipoc,
@@ -71,9 +62,7 @@
             extraSpecialArgs = { inherit inputs; };
             useGlobalPkgs = true;
             useUserPackages = true;
-            #sharedModules = [
-            #  plasma-manager.homeModules.plasma-manager
-            #];
+
           };
         };
       defaultModules = [

@@ -18,10 +18,6 @@ with lib;
       description = "Well... username?";
     };
 
-    plasma-wallpaper = mkOption {
-      type = types.str;
-      example = "";
-      description = "";
-    };
+
   };
 }

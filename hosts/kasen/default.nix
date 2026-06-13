@@ -10,10 +10,8 @@
 
   central = {
     hostname = "kasen";
-    #plasma-wallpaper = config.static.gtfo;
   };
 
-  #DE.plasma.enable = true;
   DE.niri = {
     enable = true;
     configFile = ./niri-config.kdl;
