@@ -122,9 +122,23 @@ in {
         "network#wlo1"
         "pulseaudio#audio"
         "pulseaudio#microphone"
+        "battery"
         "clock"
         "niri/language"
       ];
+      battery = {
+        bat = "BAT0";
+        interval = 30;
+        format = "{capacity}%";
+        format-charging = "󰂄 {capacity}%";
+        justify = "center";
+        tooltip = true;
+        tooltip-format = "{capacity}% — {time}";
+        states = {
+          warning = 20;
+          critical = 10;
+        };
+      };
       "niri/language" = {
         format = "{short}";
       };
@@ -182,9 +196,18 @@ in {
     #cpu,
     #gpu,
     #memory,
+    #battery,
     #clock,
     #language {
       padding: 2px 8px;
+    }
+
+    #battery.warning {
+      color: ${c.yellow};
+    }
+
+    #battery.critical {
+      color: ${c.red};
     }
   '';
 }

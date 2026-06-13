@@ -4,6 +4,7 @@
     ./boot.nix
     ./network.nix
     ./nvidia.nix
+    ./sound.nix
   ];
 
   central = {
@@ -35,7 +36,7 @@
 
   time.timeZone = "Europe/Moscow";
 
-  powerManagement.cpuFreqGovernor = "schedutil";
+  powerManagement.cpuFreqGovernor = "powersave";
 
   zramSwap.enable = true;
 
@@ -45,6 +46,8 @@
   };
   services.printing.enable = false;
   security.rtkit.enable = true;
+
+  users.users.nelande.extraGroups = [ "video" ];
 
   system.stateVersion = "23.11"; # Don't change this
 }

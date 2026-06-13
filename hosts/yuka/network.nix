@@ -1,4 +1,4 @@
-{ config, pkgs, ...}: {
+{ config, pkgs, inputs, ...}: {
   networking = {
     enableIPv6 = true;
     hostName = config.central.hostname;
@@ -17,6 +17,6 @@
       outIp = inputs.secrets.awg.outIp;
       enable = true;
     };
-    zapret.enable = true;
+    zapret2.enable = true;
   };
 }

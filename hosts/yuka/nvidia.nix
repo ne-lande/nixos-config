@@ -8,12 +8,14 @@
 
   services.thermald.enable = true;
   services.fstrim.enable = true;
+  services.tlp.enable = true;
+  services.power-profiles-daemon.enable = false;
 
  	hardware.nvidia = {
     modesetting.enable = true;
     powerManagement = {
       enable = true;
-      finegrained = false;
+      finegrained = true;
     };
     open = true;
     nvidiaSettings = true;

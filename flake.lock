@@ -10,11 +10,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780336500,
-        "narHash": "sha256-emG8CU8KecLuLprrGYMhFenCrZbaF16qyc4bTejP6wo=",
+        "lastModified": 1781290464,
+        "narHash": "sha256-zfUbYj4N5K5rY9AaM2xvE+JY3P6gNPgAR1GFyYCYKxA=",
         "ref": "refs/heads/main",
-        "rev": "a1d90dd123d4ff73ee7d97f694f0c13ede866958",
-        "revCount": 41,
+        "rev": "2a70fc98273be232c4bb8f29f80cf439f351e02c",
+        "revCount": 44,
         "type": "git",
         "url": "ssh://git@binarybears-notes.ru:2424/tools/bpf.git"
       },
@@ -50,19 +50,11 @@
         ]
       },
       "locked": {
-<<<<<<< HEAD
-        "lastModified": 1781129616,
-        "narHash": "sha256-Hl0Pz/QIKpePSU7SdK3BMe5VNmUhFvfWyg57GyawxzE=",
+        "lastModified": 1781365335,
+        "narHash": "sha256-zqDBhXMzfbdlO7F2bGHe7MOtB3xngd/+4ieMHDC+ZXo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "7dbd305f8b81050f223f00bcfbc8a6b74e048806",
-=======
-        "lastModified": 1780679734,
-        "narHash": "sha256-KmRNvpNOb7QEORa06bVgjW9kITcx0VhsI7w0vhmZyD8=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "b2b7db486e06e098711dc291bb25db82850e1d16",
->>>>>>> 4c4d026 (chore)
+        "rev": "5b6f5733726a1b2ccafb5dec6ac4ca7299fad66c",
         "type": "github"
       },
       "original": {
@@ -96,11 +88,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1780749050,
-        "narHash": "sha256-3av0pIjlOWQ6rDbNOmpUSvbNnJkGORQKKjb4LtCZsIY=",
+        "lastModified": 1781074563,
+        "narHash": "sha256-md8WlXOlfnIeHeOScMTTHFyf2d6iaTwPl2apR5EQ3P4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a799d3e3886da994fa307f817a6bc705ae538eeb",
+        "rev": "9ae611a455b90cf061d8f332b977e387bda8e1ca",
         "type": "github"
       },
       "original": {
@@ -139,13 +131,8 @@
     },
     "secrets": {
       "locked": {
-<<<<<<< HEAD
-        "lastModified": 1781106462,
-        "narHash": "sha256-sLVCX6cWvoJt/rbs2Xz8BpQEfZpo92qekCh+sksdJZw=",
-=======
-        "lastModified": 1780844672,
-        "narHash": "sha256-w8fZ4l6l69f8s9/ZeBgcTT2n5KAex+/fK77u4+zD0p0=",
->>>>>>> 4c4d026 (chore)
+        "lastModified": 1781222271,
+        "narHash": "sha256-BB5D8SLHsDOhqpAfIKDx1EgGeEYbFaDRLcqZJxZyFpE=",
         "path": "/nix-secrets",
         "type": "path"
       },

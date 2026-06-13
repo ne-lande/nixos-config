@@ -1,10 +1,6 @@
 { config, pkgs, ...} : {
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
-
-    extraModulePackages = with config.boot.kernelPackages; [
-      amneziawg
-    ];
+    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
 
     loader = {
       systemd-boot.enable = true;

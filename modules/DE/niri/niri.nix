@@ -33,6 +33,7 @@ with lib;
       grim # screenshot utility
       slurp # region selector for screenshots
       xdg-utils # desktop integration (open URLs, etc.)
+      brightnessctl # backlight control
     ];
 
     # Display manager configuration for niri
