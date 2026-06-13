@@ -17,7 +17,5 @@ with lib;
       example = "john";
       description = "Well... username?";
     };
-
-
   };
 }
