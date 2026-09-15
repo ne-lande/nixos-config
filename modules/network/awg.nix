@@ -20,9 +20,9 @@ in
 {
   options.network.awg = {
     enable = mkEnableOption "enable awg";
-    awgConfig = mkOption {
-      type = types.lines;
-      description = "AWG confguration";
+    awgConfigFile = mkOption {
+      type = types.str;
+      description = "Path to a runtime AWG config file (sops-nix secret or host-local file under /etc/secrets). Read directly by the awg unit; never copied into the store.";
     };
     outIp = mkOption {
       type = types.str;
@@ -38,58 +38,32 @@ in
   config = mkIf config.network.awg.enable (
     let
       tinyproxyConfFile = pkgs.writeText "tinyproxy-awg.conf" config.network.awg.tinyProxyConf;
-      awgConfFile = pkgs.writeText "awg.conf" config.network.awg.awgConfig;
-      awg-run = pkgs.writeShellScriptBin "awg-run" ''
-        set -euo pipefail
-
-        NETNS="awg"
-
-        if [ $# -eq 0 ]; then
-            echo "Usage: awg-run <command> [args...]"
-            exit 1
-        fi
-
-        if ! ${pkgs.iproute2}/bin/ip netns list | grep -q "^awg"; then
-            echo "awg netns not running"
-            exit 1
-        fi
-
-        exec sudo -E ${pkgs.iproute2}/bin/ip netns exec "$NETNS" /run/wrappers/bin/sudo -u "$USER" -E -- "$@"
-      '';
+      netns-exec = mylib.mkNetnsExec pkgs "awg";
+      awgConfFile = config.network.awg.awgConfigFile;
     in
     {
-      boot.extraModulePackages = with config.boot.kernelPackages; [
-        (amneziawg.overrideAttrs (old: rec {
-          version = "v1.0.20260329";
-
-          src = pkgs.fetchFromGitHub {
-            owner = "amnezia-vpn";
-            repo = "amneziawg-linux-kernel-module";
-            rev = version;
-            hash = "sha256-csKb8xFnsOYnIbnoqbpIY/R7X8OqF9O9pKC/JZH42pA=";
-          };
-        }))
-      ];
-
       environment.systemPackages = with pkgs; [
         amneziawg-tools
-        awg-run
+        netns-exec.run
       ];
 
-      security.sudo.extraRules = [
-        {
-          commands = [
-            {
-              command = "${pkgs.iproute2}/bin/ip netns exec awg *";
-              options = [
-                "NOPASSWD"
-                "SETENV"
-              ];
-            }
-          ];
-          users = [ config.central.username ];
-        }
+      boot.extraModulePackages = [
+        config.boot.kernelPackages.amneziawg
       ];
+
+      # Bind-mounted over /etc/resolv.conf by `ip netns exec awg`; DNS goes
+      # through the tunnel, not the host resolver, so it matches the VPN exit
+      environment.etc."netns/awg/resolv.conf".text = ''
+        nameserver 1.1.1.1
+        nameserver 9.9.9.9
+      '';
+
+      security.sudo = {
+        extraRules = [
+          (netns-exec.sudoRule // { users = [ config.central.username ]; })
+        ];
+        extraConfig = netns-exec.sudoEnvKeep;
+      };
 
       systemd.services.awg = {
         description = "awg netns";

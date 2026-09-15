@@ -4,8 +4,8 @@
     ./hardware.nix
     ./boot.nix
     ./nvidia.nix
-    ./sound.nix
     ./network.nix
+    ./secrets.nix
   ];
 
   central = {
@@ -23,15 +23,7 @@
 
   nix-configuration.enable = true;
 
-  # Regional
-  i18n = {
-    defaultLocale = "ru_RU.UTF-8";
-    extraLocaleSettings = {
-      LC_MESSAGES = "C.UTF-8";
-      LC_COLLATE = "C.UTF-8";
-      LC_NUMERIC = "C.UTF-8";
-    };
-  };
+  audio.enable = true;
 
   hardware.bluetooth = {
     enable = true;
@@ -48,12 +40,31 @@
     };
   };
 
-  time.timeZone = "Europe/Moscow";
-
   powerManagement.cpuFreqGovernor = "performance";
 
-  services.printing.enable = false;
-  security.rtkit.enable = true;
+  # No disk swap is configured; without any swap, memory pressure turns into
+  # direct-reclaim stalls (periodic frame hitches in games) or OOM kills.
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
+  # Upstream zram-generator tuning: default swappiness (60) makes the kernel
+  # prefer dropping page cache over compressing to zram, so reclaim stalls
+  # persist even with zram enabled.
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 180;
+    "vm.page-cluster" = 0;
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+  };
+
+  # sched_ext scheduler (xanmod ships CONFIG_SCHED_CLASS_EXT); LAVD is
+  # latency-oriented and improves frame pacing under background load.
+  services.scx = {
+    enable = true;
+    scheduler = "scx_lavd";
+  };
 
   system.stateVersion = "23.11"; # Don't change this
 }

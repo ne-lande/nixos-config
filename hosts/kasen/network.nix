@@ -10,19 +10,19 @@
     firewall.trustedInterfaces = [
       "enp6s0"
     ];
-
-    nameservers = [
-      "1.1.1.1"
-      "8.8.8.8"
-    ];
   };
 
   network = {
+    dns.enable = true;
     awg = {
-      awgConfig = inputs.secrets.awg.config;
+      # Rendered by sops-nix from the encrypted store, not inline text.
+      awgConfigFile = "/run/secrets/awg-config";
       outIp = inputs.secrets.awg.outIp;
       enable = true;
     };
+    # Rendered by sops-nix from the encrypted store, not inline text.
+    singbox.subscriptionUrlsFile = "/run/secrets/singbox-urls";
+    singbox.enable = true;
     zapret2.enable = true;
   };
 }

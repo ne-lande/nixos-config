@@ -10,14 +10,16 @@ with lib;
   };
 
   config = mkIf config.ssh.enable {
-    users.groups.ssh-user = { };
+    # The primary user must be able to authenticate — AllowGroups without
+    # any member would lock everyone (including wheel) out of sshd.
+    users.users.${config.central.username}.extraGroups = [ "ssh-user" ];
 
     services.openssh = {
       enable = true;
       ports = [ 22222 ]; # stoopid but what can i tell
       settings = {
         AllowGroups = [ "ssh-user" ];
-        UseDns = true;
+        UseDns = false; # reverse-DNS lookup only stalls logins
         X11Forwarding = false;
         PermitRootLogin = "no";
         PasswordAuthentication = false;

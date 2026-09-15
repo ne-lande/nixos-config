@@ -5,8 +5,9 @@
   ...
 }:
 let
-  metrics-default-addr = "0.0.0.0:4200";
-  username = config.central.username;
+  # Loopback only: enp6s0 is a firewall trustedInterface, so 0.0.0.0 would
+  # expose daemon metrics to the whole LAN.
+  metrics-default-addr = "127.0.0.1:4200";
 in
 with lib;
 {
@@ -15,8 +16,6 @@ with lib;
   };
 
   config = mkIf config.docker.enable {
-    users.extraGroups.docker.members = [ username ];
-
     hardware.nvidia-container-toolkit.enable = true;
     virtualisation.docker = {
       enable = true;
@@ -32,6 +31,9 @@ with lib;
       };
     };
 
+    # Deliberately no `docker` group membership: the rootful socket is
+    # root-equivalent. The CLI talks to the rootless daemon via DOCKER_HOST
+    # (set by setSocketVariable).
     environment.systemPackages = with pkgs; [
       dive
       dtop

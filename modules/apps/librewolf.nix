@@ -28,80 +28,80 @@ with lib;
         };
         policies = {
           # Updates & Background Services
-          AppAutoUpdate                 = false;
-          BackgroundAppUpdate           = false;
+          AppAutoUpdate = false;
+          BackgroundAppUpdate = false;
 
           # Feature Disabling
-          DisableBuiltinPDFViewer       = true;
-          DisableFirefoxStudies         = true;
-          DisableFirefoxAccounts        = true;
-          DisableFirefoxScreenshots     = true;
-          DisableForgetButton           = true;
+          DisableBuiltinPDFViewer = true;
+          DisableFirefoxStudies = true;
+          DisableFirefoxAccounts = true;
+          DisableFirefoxScreenshots = true;
+          DisableForgetButton = true;
           DisableMasterPasswordCreation = true;
-          DisableProfileImport          = true;
-          DisableProfileRefresh         = true;
-          DisableSetDesktopBackground   = true;
-          DisablePocket                 = true;
-          DisableTelemetry              = true;
-          DisableFormHistory            = true;
-          DisablePasswordReveal         = true;
+          DisableProfileImport = true;
+          DisableProfileRefresh = true;
+          DisableSetDesktopBackground = true;
+          DisablePocket = true;
+          DisableTelemetry = true;
+          DisableFormHistory = true;
+          DisablePasswordReveal = true;
 
           # Access Restrictions
-          BlockAboutConfig              = true;
-          BlockAboutProfiles            = true;
-          BlockAboutSupport             = true;
+          BlockAboutConfig = true;
+          BlockAboutProfiles = true;
+          BlockAboutSupport = true;
 
           # UI and Behavior
-          DisplayMenuBar                = "never";
-          DontCheckDefaultBrowser       = true;
-          HardwareAcceleration          = true;
-          OfferToSaveLogins             = false;
+          DisplayMenuBar = "never";
+          DontCheckDefaultBrowser = true;
+          HardwareAcceleration = true;
+          OfferToSaveLogins = false;
           #DefaultDownloadDirectory      = "${home}/Downloads";
 
           ExtensionSettings =
-          let
-            moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
-          in
-          {
-            "*".installation_mode = "blocked";
+            let
+              moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
+            in
+            {
+              "*".installation_mode = "blocked";
 
-            "uBlock0@raymondhill.net" = {
-              default_area = "menupanel";
-              install_url = moz "ublock-origin";
-              installation_mode = "force_installed";
-              updates_disabled = true;
-              private_browsing = true;
+              "uBlock0@raymondhill.net" = {
+                default_area = "menupanel";
+                install_url = moz "ublock-origin";
+                installation_mode = "force_installed";
+                updates_disabled = true;
+                private_browsing = true;
+              };
+              # bitwarden
+              "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+                default_area = "menupanel";
+                install_url = moz "bitwarden-password-manager";
+                installation_mode = "force_installed";
+                updates_disabled = true;
+                private_browsing = true;
+              };
+              "CanvasBlocker@kkapsner.de" = {
+                default_area = "menupanel";
+                install_url = moz "canvasblocker";
+                installation_mode = "force_installed";
+                updates_disabled = true;
+                private_browsing = true;
+              };
+              "foxyproxy@eric.h.jung" = {
+                default_area = "menupanel";
+                install_url = moz "foxyproxy-standard";
+                installation_mode = "force_installed";
+                updates_disabled = true;
+                private_browsing = true;
+              };
             };
-            # bitwarden
-            "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
-              default_area = "menupanel";
-              install_url = moz "bitwarden-password-manager";
-              installation_mode = "force_installed";
-              updates_disabled = true;
-              private_browsing = true;
-            };
-            "CanvasBlocker@kkapsner.de" = {
-              default_area = "menupanel";
-              install_url = moz "canvasblocker";
-              installation_mode = "force_installed";
-              updates_disabled = true;
-              private_browsing = true;
-            };
-            "foxyproxy@eric.h.jung" = {
-              default_area = "menupanel";
-              install_url = moz "foxyproxy-standard";
-              installation_mode = "force_installed";
-              updates_disabled = true;
-              private_browsing = true;
-            };
-          };
 
           "3rdparty".Extensions = {
             "uBlock0@raymondhill.net".adminSettings = {
               userSettings = rec {
-                uiTheme            = "dark";
-                uiAccentCustom     = true;
-                uiAccentCustom0    = "#8300ff";
+                uiTheme = "dark";
+                uiAccentCustom = true;
+                uiAccentCustom0 = "#8300ff";
                 cloudStorageEnabled = mkForce false;
 
                 importedLists = [
@@ -139,55 +139,73 @@ with lib;
             default = "google";
             privateDefault = "duckduckgo";
             engines = {
-            "google" = {
-              urls = [
-                {
-                  template = "https://www.google.com/search";
-                  params = [
-                    { name = "q"; value = "{searchTerms}"; }
-                  ];
-                }
-              ];
-            };
-            "Nix Packages" = {
+              "google" = {
+                urls = [
+                  {
+                    template = "https://www.google.com/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
+              "Nix Packages" = {
                 urls = [
                   {
                     template = "https://search.nixos.org/packages";
                     params = [
-                      { name = "channel"; value = "unstable"; }
-                      { name = "query";   value = "{searchTerms}"; }
+                      {
+                        name = "channel";
+                        value = "unstable";
+                      }
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
                     ];
                   }
                 ];
-                icon           = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 definedAliases = [ "@np" ];
               };
-            "Nix Options" = {
+              "Nix Options" = {
                 urls = [
                   {
                     template = "https://search.nixos.org/options";
                     params = [
-                      { name = "channel"; value = "unstable"; }
-                       { name = "query";   value = "{searchTerms}"; }
+                      {
+                        name = "channel";
+                        value = "unstable";
+                      }
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
                     ];
                   }
                 ];
-                icon           = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 definedAliases = [ "@no" ];
               };
-            "NixOS Wiki" = {
+              "NixOS Wiki" = {
                 urls = [
                   {
                     template = "https://wiki.nixos.org/w/index.php";
                     params = [
-                      { name = "search"; value = "{searchTerms}"; }
+                      {
+                        name = "search";
+                        value = "{searchTerms}";
+                      }
                     ];
                   }
                 ];
-                icon           = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 definedAliases = [ "@nw" ];
               };
-          };
+            };
           };
           containersForce = true;
           containers = {

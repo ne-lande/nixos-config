@@ -4,7 +4,6 @@
     ./boot.nix
     ./network.nix
     ./nvidia.nix
-    ./sound.nix
   ];
 
   central = {
@@ -24,17 +23,7 @@
 
   nix-configuration.enable = true;
 
-  # Regional
-  i18n = {
-    defaultLocale = "ru_RU.UTF-8";
-    extraLocaleSettings = {
-      LC_MESSAGES = "C.UTF-8";
-      LC_COLLATE = "C.UTF-8";
-      LC_NUMERIC = "C.UTF-8";
-    };
-  };
-
-  time.timeZone = "Europe/Moscow";
+  audio.enable = true;
 
   powerManagement.cpuFreqGovernor = "powersave";
 
@@ -44,8 +33,6 @@
     enable = true;
     powerOnBoot = true;
   };
-  services.printing.enable = false;
-  security.rtkit.enable = true;
 
   users.users.nelande.extraGroups = [ "video" ];
 

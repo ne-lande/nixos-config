@@ -18,14 +18,14 @@ with lib;
   };
 
   config = mkIf config.DE.awww.enable {
-    home-manager.users.${username} = {...}: {
+    home-manager.users.${username} = { ... }: {
       services.awww.enable = true;
     };
 
     systemd.user.timers."awww-timer" = {
       wantedBy = [ "timers.target" ];
-      after = ["awww.service"];
-      requires = ["awww.service"];
+      after = [ "awww.service" ];
+      requires = [ "awww.service" ];
       timerConfig = {
         User = username;
         Unit = "awww-random.service";
@@ -36,12 +36,13 @@ with lib;
     };
 
     systemd.user.services."awww-random" = {
-      after = ["awww.service"];
-      requires = ["awww.service"];
+      after = [ "awww.service" ];
+      requires = [ "awww.service" ];
       serviceConfig = {
         Type = "oneshot";
         User = username;
-        ExecStart = with pkgs;
+        ExecStart =
+          with pkgs;
           writers.writeBash "awww-random" ''
             set -e
 

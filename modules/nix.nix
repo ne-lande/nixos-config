@@ -13,8 +13,12 @@ with lib;
           "nix-command"
           "flakes"
         ];
-        auto-optimise-store = true;
+        # Keep nix-direnv dev shells alive across `nh clean` GC runs.
+        keep-outputs = true;
       };
+      # Scheduled dedup instead of auto-optimise-store, which hardlink-scans
+      # on every store write and slows all builds.
+      optimise.automatic = true;
     };
 
     programs.nh = {

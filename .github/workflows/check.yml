@@ -1,0 +1,48 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - run: nix fmt -- --fail-on-change
+
+      # The flake evaluates a path:/nix-secrets input that only exists on
+      # real hosts; provide an eval-only stub with dummy values. Secret
+      # files stay empty — contents are only read at activation time.
+      - name: Stub /nix-secrets
+        run: |
+          sudo mkdir -p /nix-secrets/secrets
+          sudo tee /nix-secrets/flake.nix > /dev/null <<'EOF'
+          {
+            description = "stub";
+            outputs = { self, ... }: (import ./default.nix) // {
+              sopsFiles = {
+                email = ./secrets/email.yaml;
+                user = ./secrets/user.yaml;
+                awg = ./secrets/awg.yaml;
+                singbox = ./secrets/singbox.yaml;
+              };
+            };
+          }
+          EOF
+          sudo tee /nix-secrets/default.nix > /dev/null <<'EOF'
+          {
+            git = { userName = "ci"; userEmail = "ci@example.invalid"; };
+            email.gmail.address = "ci@example.invalid";
+            email.yandex.address = "ci2@example.invalid";
+            email.mailru.address = "ci3@example.invalid";
+            awg.outIp = "10.8.0.23/24";
+            zerotierNetworks = [ "0000000000000000" ];
+          }
+          EOF
+          sudo touch /nix-secrets/secrets/email.yaml /nix-secrets/secrets/user.yaml /nix-secrets/secrets/awg.yaml /nix-secrets/secrets/singbox.yaml
+
+      - run: nix flake check --no-update-lock-file

@@ -1,4 +1,10 @@
-{ config, pkgs, inputs, ...}: {
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+{
   networking = {
     enableIPv6 = true;
     hostName = config.central.hostname;
@@ -13,7 +19,9 @@
   network = {
     #zerotier.enable = true;
     awg = {
-      awgConfig = inputs.secrets.awg.config;
+      # Host-local plain file (never inside the /nix-secrets flake source,
+      # which gets copied to the store). Root-owned 0400.
+      awgConfigFile = "/etc/secrets/awg.conf";
       outIp = inputs.secrets.awg.outIp;
       enable = true;
     };

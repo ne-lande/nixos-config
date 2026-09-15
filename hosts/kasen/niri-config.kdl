@@ -3,13 +3,15 @@
 
 prefer-no-csd
 
-spawn-at-startup "waybar"
+// waybar is started by its systemd user unit (programs.waybar.systemd)
 spawn-at-startup "kitten" "quick-access-terminal"
 
 output "DP-1" {
      mode "5120x1440@144.000"
      scale 1.0
-     variable-refresh-rate
+     // Always-on VRR on NVIDIA causes cursor-driven refresh oscillation and
+     // frame-pacing stutter; only enable it for windows that opt in below.
+     variable-refresh-rate on-demand=true
 }
 
 input {
@@ -42,10 +44,17 @@ binds {
 
     Mod+Space { toggle-window-floating; }
     Mod+F { fullscreen-window; }
+    Mod+O { toggle-overview; }
+    Mod+Shift+Slash { show-hotkey-overlay; }
 
     Print { screenshot; }
-    //Mod+Print { screenshot-window write-to-disk=false; }
+    Mod+Print { screenshot-window; }
     //Mod+Shift+Print { screenshot-screen write-to-disk=false; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
 
     Mod+R { switch-preset-column-width; }
     Mod+Shift+R { switch-preset-window-height; }
@@ -145,4 +154,11 @@ window-rule {
 window-rule {
     match app-id=r#"zoom"#
     open-floating true
+}
+
+// Steam games (app-id steam_app_<id>) get VRR via the on-demand output
+// setting above, so the desktop runs fixed 144Hz but games still adapt.
+window-rule {
+    match app-id=r#"^steam_app_"#
+    variable-refresh-rate true
 }

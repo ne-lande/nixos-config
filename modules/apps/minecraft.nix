@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 {
   options.apps.minecraft = {
@@ -10,9 +15,9 @@ with lib;
       prismlauncher
 
       # Multiple Java versions — PrismLauncher auto-detects these
-      temurin-bin-8   # Minecraft < 1.17
-      temurin-bin-17  # Minecraft 1.17–1.20
-      temurin-bin-21  # Minecraft 1.21+
+      temurin-bin-8 # Minecraft < 1.17
+      temurin-bin-17 # Minecraft 1.17–1.20
+      temurin-bin-21 # Minecraft 1.21+
     ];
 
     # Expose Java binaries so PrismLauncher can find them via PATH detection
@@ -24,7 +29,10 @@ with lib;
     # Open LAN multiplayer port
     networking.firewall.allowedUDPPorts = [ 19132 ];
     networking.firewall.allowedTCPPortRanges = [
-      { from = 25500; to = 25600; } # LAN world range
+      {
+        from = 25500;
+        to = 25600;
+      } # LAN world range
     ];
   };
 }

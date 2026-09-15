@@ -28,9 +28,9 @@ with lib;
           enable = true;
           plugins = with pkgs.obs-studio-plugins; [
             obs-pipewire-audio-capture # per-app PipeWire audio sources
-            wlrobs                     # Wayland screen capture (niri/wlroots)
-            obs-vaapi                  # hardware video encoding
-            obs-vkcapture              # Vulkan/OpenGL game capture
+            wlrobs # Wayland screen capture (niri/wlroots)
+            obs-vaapi # hardware video encoding
+            obs-vkcapture # Vulkan/OpenGL game capture
           ];
         };
       };

@@ -1,8 +1,11 @@
 let
   c = import ./colors.nix;
-in {
+in
+{
   enable = true;
-  systemd.enable = false;
+  # Systemd user unit restarts waybar on crash; spawning it from niri
+  # (spawn-at-startup) left no supervision.
+  systemd.enable = true;
   settings = {
     bar = {
       layer = "top";
@@ -101,6 +104,17 @@ in {
         tooltip = true;
         tooltip-format = "󰢮 {ifname}\n󰩟 {ipaddr}/{cidr}\n󰞒 {bandwidthDownBytes}\n󰞕 {bandwidthUpBytes}";
       };
+      # Click to keep the machine awake (blocks swayidle lock/suspend),
+      # e.g. while watching video.
+      idle_inhibitor = {
+        format = "{icon}";
+        format-icons = {
+          activated = "󰅶";
+          deactivated = "󰾪";
+        };
+        tooltip-format-activated = "Idle inhibited (no lock/suspend)";
+        tooltip-format-deactivated = "Idle allowed";
+      };
       bluetooth = {
         format-disabled = "";
         format-off = "";
@@ -117,6 +131,7 @@ in {
       ];
       modules-right = [
         "tray"
+        "idle_inhibitor"
         "bluetooth"
         "network#eno1"
         "network#wlo1"

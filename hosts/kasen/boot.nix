@@ -5,23 +5,22 @@
 
     loader = {
       efi.canTouchEfiVariables = true;
-      systemd-boot.enable = true;
-      #grub = {
-      #  enable = true;
-      #  device = "nodev";
-      #  efiSupport = true;
-      #  useOSProber = false;
-
-      #  gfxmodeEfi = "5120x1440";
-      #  gfxmodeBios = "5120x1440";
-      #  gfxpayloadEfi = "keep";
-      #  gfxpayloadBios = "keep";
-      #};
+      systemd-boot = {
+        enable = true;
+        # Keep the boot menu short and /boot from filling up; nh clean
+        # handles the store side but not ESP entries until GC.
+        configurationLimit = 10;
+      };
     };
 
     initrd = {
       verbose = false;
       systemd.enable = true;
+
+      # TPM2 auto-unlock: systemd-cryptsetup uses the TPM2 token when
+      # enrolled (systemd-cryptenroll), otherwise falls back to the
+      # passphrase prompt. Existing passphrase slot stays untouched.
+      luks.devices."crypted".crypttabExtraOpts = [ "tpm2-device=auto" ];
       availableKernelModules = [
         "xhci_pci"
         "ahci"
@@ -61,36 +60,6 @@
     ];
   };
 
-  #boot.initrd.luks.devices."luks-bc46ce17-eb27-4ad3-a7fe-b7dfd665e60c".device =
-  #  "/dev/disk/by-uuid/bc46ce17-eb27-4ad3-a7fe-b7dfd665e60c";
-  #boot.initrd.luks.devices."luks-95aaa045-995b-44a5-8278-d7cad3559599".device =
-  #  "/dev/disk/by-uuid/95aaa045-995b-44a5-8278-d7cad3559599";
-
-  #fileSystems."/old-root" = {
-  #  device = "/dev/disk/by-uuid/7a8d0dbb-e04d-4e89-9a6a-22db04ca1ea6";
-  #  fsType = "ext4";
-  #};
-
-  # old boot
-  #fileSystems."/boot" = {
-  #  device = "/dev/disk/by-uuid/9729-4535";
-  #  fsType = "vfat";
-  #  options = [
-  #    "fmask=0022"
-  #    "dmask=0022"
-  #  ];
-  #};
-
-  # new boot
-  #fileSystems."/boot" = {
-  #  device = "/dev/disk/by-uuid/b7c8-fde7";
-  #  fsType = "vfat";
-  #  options = [
-  #    "fmask=0022"
-  #    "dmask=0022"
-  #  ];
-  #};
-
   fileSystems."/stor" = {
     device = "/dev/disk/by-uuid/59645dd4-8f7f-46f6-b79b-835aef96577c";
     fsType = "btrfs";
@@ -100,8 +69,4 @@
       "exec"
     ];
   };
-
-  #swapDevices = [
-  #  { device = "/dev/disk/by-uuid/90787e9d-bd79-4c96-bad0-cdf3d445aed1"; }
-  #];
 }

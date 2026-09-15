@@ -6,7 +6,7 @@
   ...
 }:
 let
-  system = "x86_64-linux";
+  system = pkgs.stdenv.hostPlatform.system;
 
   packages = with pkgs; {
     fonts = [
@@ -19,7 +19,6 @@ let
     apps-base = [
       telegram-desktop
       libreoffice-still
-      prismlauncher
       gimp
       claude-code
       insomnia
@@ -97,12 +96,6 @@ in
   config =
     with lib;
     mkIf config.lists.enable {
-      nixpkgs.config = {
-        allowUnfree = true;
-        allowInsecure = false;
-        allowUnsupportedSystem = true;
-      };
-
       fonts.packages = packages.fonts;
 
       environment.systemPackages =

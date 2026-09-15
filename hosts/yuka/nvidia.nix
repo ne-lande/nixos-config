@@ -1,4 +1,4 @@
-{ config, ... } : {
+{ config, ... }: {
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
   services.xserver.videoDrivers = [
@@ -7,11 +7,10 @@
   ];
 
   services.thermald.enable = true;
-  services.fstrim.enable = true;
   services.tlp.enable = true;
   services.power-profiles-daemon.enable = false;
 
- 	hardware.nvidia = {
+  hardware.nvidia = {
     modesetting.enable = true;
     powerManagement = {
       enable = true;

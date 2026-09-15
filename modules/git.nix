@@ -18,8 +18,10 @@ with lib;
     programs.git = {
       enable = true;
       config = {
-        user = { name = config.git.userName; }
-          // optionalAttrs (config.git.userEmail != null) { email = config.git.userEmail; };
+        user = {
+          name = config.git.userName;
+        }
+        // optionalAttrs (config.git.userEmail != null) { email = config.git.userEmail; };
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         advice.addIgnoredFile = false;

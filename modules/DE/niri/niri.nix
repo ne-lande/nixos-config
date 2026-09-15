@@ -57,20 +57,23 @@ with lib;
       # breaks Proton/Wine games which expect XWayland, causing image freeze
       _JAVA_AWT_WM_NONREPARENTING = "1";
       XDG_SESSION_TYPE = "wayland";
+      # Let newer Proton opt-in to native Wayland when it can handle it
+      PROTON_ENABLE_WAYLAND = "1";
+    }
+    // optionalAttrs (builtins.elem "nvidia" config.services.xserver.videoDrivers) {
       # NVIDIA Wayland backend — required for correct GBM/EGL path on NVIDIA
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
-      # Let newer Proton opt-in to native Wayland when it can handle it
-      PROTON_ENABLE_WAYLAND = "1";
     };
 
-    # Security/XDG portal setup for Wayland
+    # Security/XDG portal setup for Wayland.
+    # niri upstream recommends the GNOME portal (native niri screencast
+    # support); xdg-desktop-portal-wlr does not work on niri and having it
+    # installed makes screen-share portal selection nondeterministic.
     xdg.portal = {
       enable = true;
-      wlr.enable = true; # For wlroots-based compositors
       extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
         xdg-desktop-portal-gtk
         xdg-desktop-portal-gnome
       ];

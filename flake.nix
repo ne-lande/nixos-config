@@ -33,9 +33,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # omp coding agent; dont follow nixpkgs — its package pins bun2nix/rust-overlay
+    # against upstream's locked nixpkgs, following would desync the nix-community cache
+    omp = {
+      url = "github:can1357/oh-my-pi";
+    };
+
     # obv?
     secrets = {
       url = "path:/nix-secrets";
+    };
+    # secret provisioning; kasen renders via sops-nix — other hosts read
+    # plain runtime files under /etc/secrets (never store paths)
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -62,8 +74,16 @@
             extraSpecialArgs = { inherit inputs; };
             useGlobalPkgs = true;
             useUserPackages = true;
-
           };
+        };
+      mkHost =
+        { modules }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs mylib;
+          };
+          modules = defaultModules ++ modules;
         };
       defaultModules = [
         customModules
@@ -73,35 +93,23 @@
       ];
     in
     {
-      nixosConfigurations = {
-        "kasen" = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs mylib; };
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
 
-          modules = defaultModules ++ [
+      nixosConfigurations = {
+        "kasen" = mkHost {
+          modules = [
             disko.nixosModules.disko
+            inputs.sops-nix.nixosModules.sops
             ./hosts/kasen/disko.nix
             ./hosts/kasen
             ./home/nelande
           ];
         };
 
-        "yuka" = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs mylib; };
-
-          modules = defaultModules ++ [
+        "yuka" = mkHost {
+          modules = [
             ./hosts/yuka
             ./home/nelande
-          ];
-        };
-
-        "abashed" = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs mylib; };
-          modules = defaultModules ++ [
-            ./hosts/abashed
-            ./home/honeset
           ];
         };
       };
