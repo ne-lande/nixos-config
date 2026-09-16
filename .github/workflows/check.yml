@@ -44,5 +44,7 @@ jobs:
           }
           EOF
           sudo touch /nix-secrets/secrets/email.yaml /nix-secrets/secrets/user.yaml /nix-secrets/secrets/awg.yaml /nix-secrets/secrets/singbox.yaml
-
-      - run: nix flake check --no-update-lock-file
+      # The stub can never match the narHash pinned in flake.lock (that is
+      # the real /nix-secrets on some host); --override-input bypasses the
+      # lock node for this input only — everything else stays pinned.
+      - run: nix flake check --no-update-lock-file --override-input secrets path:/nix-secrets
