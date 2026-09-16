@@ -44,7 +44,34 @@ jobs:
           }
           EOF
           sudo touch /nix-secrets/secrets/email.yaml /nix-secrets/secrets/user.yaml /nix-secrets/secrets/awg.yaml /nix-secrets/secrets/singbox.yaml
-      # The stub can never match the narHash pinned in flake.lock (that is
-      # the real /nix-secrets on some host); --override-input bypasses the
-      # lock node for this input only — everything else stays pinned.
-      - run: nix flake check --no-update-lock-file --override-input secrets path:/nix-secrets
+
+      # Private git+ssh flakes (binarybears-notes.ru) — no credentials on
+      # GitHub, so evaluate stubs shaped like the attrs consumed in
+      # modules/lists.nix (burpsuitepro / idapro). Nothing is fetched.
+      - name: Stub private flakes
+        run: |
+          mkdir -p /tmp/nix-stubs/bpf /tmp/nix-stubs/ipoc
+          tee /tmp/nix-stubs/bpf/flake.nix > /dev/null <<'EOF'
+          {
+            outputs = { self }: {
+              packages.x86_64-linux.burpsuitepro = derivation {
+                name = "burpsuitepro-stub"; system = "x86_64-linux";
+                builder = "/bin/sh"; args = [ "-c" "true" ];
+              };
+            };
+          }
+          EOF
+          tee /tmp/nix-stubs/ipoc/flake.nix > /dev/null <<'EOF'
+          {
+            outputs = { self }: {
+              packages.x86_64-linux.idapro = derivation {
+                name = "idapro-stub"; system = "x86_64-linux";
+                builder = "/bin/sh"; args = [ "-c" "true" ];
+              };
+            };
+          }
+          EOF
+      # Stubs can never match what flake.lock pins (real secrets dir, real
+      # private flakes); --override-input bypasses those lock nodes only —
+      # everything else stays pinned to the lock.
+      - run: nix flake check --no-update-lock-file --override-input secrets path:/nix-secrets --override-input bpf path:/tmp/nix-stubs/bpf --override-input ipoc path:/tmp/nix-stubs/ipoc
