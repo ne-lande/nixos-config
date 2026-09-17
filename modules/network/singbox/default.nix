@@ -80,6 +80,12 @@ in
         "network-online.target"
         "sops-nix.service"
       ];
+      # 5 retries in 10 min: enough for any transient outage (a switch
+      # restarting NetworkManager/wpa_supplicant, a WiFi hiccup); past the
+      # burst limit the unit stays failed and visible instead of looping
+      # forever against a dead upstream — the timer retries it later.
+      startLimitIntervalSec = 600;
+      startLimitBurst = 5;
       before = [ "singbox.service" ];
       serviceConfig = {
         Type = "oneshot";
@@ -106,6 +112,15 @@ in
         # singbox is After=this unit, so its start job waits for this unit
         # to go active, which cannot happen while this ExecStartPost runs
         ExecStartPost = "+${pkgs.systemd}/bin/systemctl --no-block restart singbox.service";
+        # A timer/switch-triggered run can land in the seconds-long window
+        # where the network is restarting (fetches fail instantly, DNS is
+        # gone) — network-online.target can't help, it was reached at boot
+        # and never deactivates. Retry after the interface settles; the
+        # config is only replaced on a successful run, and ExecStartPost
+        # (restart singbox) is skipped on failed attempts. Requires
+        # systemd >= 244 (Restart= on oneshots).
+        Restart = "on-failure";
+        RestartSec = "30s";
         NoNewPrivileges = true;
         PrivateTmp = true;
         ProtectHome = "read-only";

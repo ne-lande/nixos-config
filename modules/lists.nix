@@ -18,7 +18,7 @@ let
 
     apps-base = [
       telegram-desktop
-      libreoffice-still
+      libreoffice-stable
       gimp
       claude-code
       insomnia
